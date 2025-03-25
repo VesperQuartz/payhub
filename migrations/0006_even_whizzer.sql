@@ -1,0 +1,1 @@
+ALTER TABLE `business_profile` ADD `image` text DEFAULT '/store.jpg';

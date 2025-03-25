@@ -1,101 +1,125 @@
+import Link from "next/link";
+import { CircleDollarSign } from "lucide-react";
 import Image from "next/image";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="h-screen bg-black text-white overflow-clip bg-gradient-to-b from-black via-black to-[#FF6B00]">
+      <header className="container mx-auto px-4 py-6 flex items-center justify-between">
+        <div className="text-2xl font-serif italic font-bold">PAYHUB</div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <nav className="hidden md:flex items-center gap-8">
+          <Link
+            href="#how-it-works"
+            className="hover:text-gray-300 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            How it Works
+          </Link>
+          <Link
+            href="#features"
+            className="hover:text-gray-300 transition-colors"
           >
-            Read our docs
-          </a>
+            Features
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-4">
+          <Link
+            href="#connect"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2 transition-colors"
+          >
+            Connect Wallet <span className="text-xl">›</span>
+          </Link>
+          <Link
+            href="/register"
+            className="border border-white hover:bg-white/10 text-white px-4 py-2 rounded transition-colors"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 text-center">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto">
+          <span className="text-emerald-400 italic">Instant</span> and{" "}
+          <span className="text-emerald-400 italic">Secure</span> Payments, No
+          Complexity
+        </h1>
+
+        <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+          For businesses and buyers: Accept PYUSD payments, track sales, and
+          protect purchases effortlessly
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-4 mb-5">
+          <div className="bg-black border border-emerald-500/30 rounded-full px-4 py-2 flex items-center gap-2">
+            <div className="bg-emerald-500/20 p-1 rounded-full">
+              <CircleDollarSign className="w-4 h-4 text-emerald-400" />
+            </div>
+            <span>Instant Payments</span>
+          </div>
+
+          <div className="bg-black border border-emerald-500/30 rounded-full px-4 py-2 flex items-center gap-2">
+            <div className="bg-emerald-500/20 p-1 rounded-full">
+              <CircleDollarSign className="w-4 h-4 text-emerald-400" />
+            </div>
+            <span>Purchase Protection</span>
+          </div>
+
+          <div className="bg-black border border-emerald-500/30 rounded-full px-4 py-2 flex items-center gap-2">
+            <div className="bg-emerald-500/20 p-1 rounded-full">
+              <CircleDollarSign className="w-4 h-4 text-emerald-400" />
+            </div>
+            <span>Smart Fraud Detection</span>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4 mb-16">
+          <Link
+            href="/register"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded flex items-center gap-2 transition-colors"
+          >
+            Get Started as a Merchant <span className="text-xl">›</span>
+          </Link>
+
+          <Link
+            href="#customers"
+            className="border-2 border-white hover:bg-white/10 text-white px-6 py-3 rounded flex items-center gap-2 transition-colors"
+          >
+            For Customers <span className="text-xl">›</span>
+          </Link>
+        </div>
+
+        <div className="relative max-w-md mx-auto">
+          <div className="relative">
+            <div className="bg-gray-900 rounded-[40px] p-4 border-4 border-gray-800 shadow-2xl">
+              <Image
+                src="/phone.png"
+                width={500}
+                height={500}
+                alt="wallet-info"
+              />
+            </div>
+          </div>
+
+          <div className="absolute -left-48 top-1/3 max-w-xs bg-white text-black p-4 rounded-lg shadow-lg hidden md:block">
+            <h4 className="font-semibold text-lg mb-1">Make Payments</h4>
+            <p className="text-sm text-gray-600">
+              Pay securely with PYUSD and get instant transaction confirmation.
+            </p>
+          </div>
+
+          <div className="absolute -right-48 top-1/4 max-w-xs bg-white text-black p-4 rounded-lg shadow-lg hidden md:block">
+            <h4 className="font-semibold text-lg mb-1">Browse Businesses</h4>
+            <p className="text-sm text-gray-600">
+              Find local businesses that accept PYUSD and view their products
+              and services
+            </p>
+          </div>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
-}
+};
+
+export default Home;
