@@ -4,11 +4,12 @@ import { useState } from "react";
 import { MapPin, Star, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useGetStoreProduct } from "@/app/hooks/api";
 import { SelectProduct } from "@/app/database/schema";
 import Image from "next/image";
 import { useAccount } from "wagmi";
+import { usePaymentInfoStore } from "@/app/store";
 
 const BusinessPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<SelectProduct | null>(
@@ -16,7 +17,9 @@ const BusinessPage = () => {
   );
   const { address } = useAccount();
   const [activeTab, setActiveTab] = useState("products");
-  const { businessAddress } = useParams();
+  const { businessAddress } = useParams<{
+    businessAddress: `0x${string}`;
+  }>();
   const business = useGetStoreProduct().data?.find(
     (store) => store.merchantAddress === businessAddress,
   );
@@ -24,8 +27,19 @@ const BusinessPage = () => {
   const handleSelectProduct = (product: SelectProduct) => {
     setSelectedProduct(product);
   };
+  const paymentInfo = usePaymentInfoStore();
+  const router = useRouter();
 
-  console.log(business, "BUS");
+  const handleProcedPayment = () => {
+    if (selectedProduct) {
+      paymentInfo.setProduct(selectedProduct);
+      paymentInfo.setBusiness({
+        name: business!.businessName,
+        address: businessAddress!,
+      });
+      router.push("/store/payment/connect");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white py-8 px-4 md:px-8">
@@ -180,6 +194,7 @@ const BusinessPage = () => {
               <Button
                 className="bg-[#FF6B00] hover:bg-[#E05E00]"
                 disabled={!address}
+                onClick={handleProcedPayment}
               >
                 Proceed to Payment
                 <ChevronRight size={16} className="ml-2" />

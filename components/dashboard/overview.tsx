@@ -3,15 +3,9 @@ import SalesAnalytics from "./sales-analytics";
 import StatCard from "./stat-card";
 import TopCustomersTable from "./top-customers-table";
 import TransactionsTable from "./transactions-table";
-import { useUserInfoStore } from "@/app/store";
-import { useReadPyUsdBalanceOf } from "@/app/generated";
 import { useGetTransactionByMerchantAddress } from "@/app/hooks/api";
 import { useAccount } from "wagmi";
 export const OverView = () => {
-  const user = useUserInfoStore();
-  const data = useReadPyUsdBalanceOf({
-    args: [user.payload!.walletAddress as `0x${string}`],
-  });
   const { address } = useAccount();
   const transactions = useGetTransactionByMerchantAddress(address!);
   const pendingTransaction = transactions.data?.filter(
@@ -29,7 +23,7 @@ export const OverView = () => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Your Balance"
-          value={`$${Number(data?.data) / 1e6}`}
+          value={`0`}
           valueColor="text-emerald-500"
           showEyeIcon={true}
         />

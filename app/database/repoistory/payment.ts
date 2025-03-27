@@ -12,6 +12,9 @@ interface TransactionRepositoryImpl {
   findTransactionByMerchantAddress(
     merchantAddress: string,
   ): Promise<SelectTransaction[]>;
+  findTransactionByCustomerAddress(
+    customerAddress: string,
+  ): Promise<SelectTransaction[]>;
 }
 
 export class TransactionRepository implements TransactionRepositoryImpl {
@@ -33,6 +36,21 @@ export class TransactionRepository implements TransactionRepositoryImpl {
         .select()
         .from(transactionTable)
         .where(eq(transactionTable.merchantAddress, merchantAddress)),
+    );
+    if (error) {
+      throw error;
+    }
+    return transaction;
+  }
+
+  async findTransactionByCustomerAddress(
+    customerAddress: `0x${string}`,
+  ): Promise<SelectTransaction[]> {
+    const [error, transaction] = await to(
+      db
+        .select()
+        .from(transactionTable)
+        .where(eq(transactionTable.customerAddress, customerAddress)),
     );
     if (error) {
       throw error;

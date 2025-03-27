@@ -85,6 +85,14 @@
   z-index: 99999 !important;
 }
 
+.printContent {
+  display: flex;
+
+  @media print {
+    display: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

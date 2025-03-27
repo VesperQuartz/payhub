@@ -1,6 +1,23 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { InsertUser, SelectBusinessProfile } from "../database/schema";
+import {
+  InsertUser,
+  SelectBusinessProfile,
+  SelectProduct,
+} from "../database/schema";
+
+type PaymentInfoState = {
+  business:
+    | {
+        name: string;
+        address: `0x${string}`;
+      }
+    | undefined;
+  product: SelectProduct | undefined;
+  setBusiness: (business: { name: string; address: `0x${string}` }) => void;
+  setProduct: (product: SelectProduct) => void;
+  reset: () => void;
+};
 
 type BusinessProfileState = {
   hasSetupProfile: boolean;
@@ -38,6 +55,21 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
     }),
     {
       name: "payhub-profile-storage",
+    },
+  ),
+);
+
+export const usePaymentInfoStore = create<PaymentInfoState>()(
+  persist(
+    (set) => ({
+      business: undefined,
+      product: undefined,
+      setBusiness: (business) => set({ business }),
+      setProduct: (product) => set({ product }),
+      reset: () => set({ business: undefined, product: undefined }),
+    }),
+    {
+      name: "payment-info-store",
     },
   ),
 );

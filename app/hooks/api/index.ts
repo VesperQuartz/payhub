@@ -221,6 +221,24 @@ export const useGetTransactionByMerchantAddress = (
   });
 };
 
+export const useGetTransactionByCustomerAddress = (
+  customerAddress: `0x${string}`,
+) => {
+  return useQuery({
+    queryKey: ["transaction", customerAddress],
+    queryFn: async () => {
+      const [error, response] = await to(
+        ky.get(`/api/transaction/users/${customerAddress}`),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<SelectTransaction[]>();
+    },
+  });
+};
 export const useGetStoreProduct = () => {
   return useQuery({
     queryKey: ["store"],

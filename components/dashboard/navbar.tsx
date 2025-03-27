@@ -10,7 +10,6 @@ import Link from "next/link";
 export const NavBar = () => {
   const user = useUserInfoStore();
   const path = usePathname();
-  console.log(path);
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">

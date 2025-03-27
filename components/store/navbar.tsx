@@ -3,7 +3,9 @@
 import { ChevronDown, CircleDollarSign, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { ConnectWallet } from "../connect-wallet";
+import Image from "next/image";
+import { ShowBalance } from "../balance";
+import { ConnectWallet } from "./connect-wallet";
 
 export const NavBar = () => {
   return (
@@ -18,17 +20,16 @@ export const NavBar = () => {
               <span className="text-lg font-semibold">PayHub</span>
             </a>
           </Link>
+          <div className="flex justify-center items-center w-[200px] gap-2">
+            <Image src="/pyusd.png" width={25} height={25} alt="PYUSD" />
+            <ShowBalance />
+          </div>
         </div>
 
         <nav className="hidden md:flex items-center space-x-8">
           <Link href="/store" passHref legacyBehavior>
             <a className="text-white hover:text-neutral-300 transition-colors">
               Explore
-            </a>
-          </Link>
-          <Link href="/store/favorites" passHref legacyBehavior>
-            <a className="text-white hover:text-neutral-300 transition-colors">
-              Favorites
             </a>
           </Link>
           <Link href="/store/transactions" passHref legacyBehavior>

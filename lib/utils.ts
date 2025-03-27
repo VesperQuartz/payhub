@@ -53,3 +53,7 @@ export const getTopCustomers = (
   customers.sort((a, b) => b.price - a.price);
   return customers;
 };
+
+export const toNetWorkFee = (value: bigint | undefined | number): number => {
+  return value ? Number(value) / 10e9 : 0;
+};

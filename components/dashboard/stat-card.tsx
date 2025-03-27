@@ -1,6 +1,7 @@
 import { MoreHorizontal } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { ShowBalance } from "../balance";
 
 interface StatCardProps {
   title: string;
@@ -30,7 +31,15 @@ const StatCard = ({
       <div className="space-y-2">
         <p className="text-sm text-neutral-400">{title}</p>
         <div className="flex gap-5 justify-between">
-          <p className={`text-3xl font-bold ${valueColor}`}>{value}</p>
+          <p className={`text-3xl font-bold ${valueColor}`}>
+            {title === "Your Balance" ? (
+              <>
+                $ <ShowBalance />
+              </>
+            ) : (
+              value
+            )}
+          </p>
         </div>
       </div>
 

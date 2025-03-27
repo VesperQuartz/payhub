@@ -231,6 +231,27 @@ app.get(
   },
 );
 
+app.get(
+  "/transaction/users/:customerAddress",
+  zValidator(
+    "param",
+    z.object({
+      customerAddress: z.custom<`0x${string}`>(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const payment = new TransactionRepository();
+    const [error, result] = await to(
+      payment.findTransactionByCustomerAddress(payload.customerAddress),
+    );
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json(result);
+  },
+);
+
 app.get("/store", async (c) => {
   const store = new StoreRepository();
   const [error, result] = await to(store.getAllStoreItems());

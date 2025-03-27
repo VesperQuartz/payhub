@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BusinessCard } from "@/components/store/business-card";
@@ -52,7 +52,6 @@ export default function StorePage() {
           </p>
         </div>
 
-        {/* Search Bar */}
         <div className="relative max-w-2xl mx-auto mb-8">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
           <Input
@@ -64,7 +63,6 @@ export default function StorePage() {
           />
         </div>
 
-        {/* Category Filters */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((category) => (
             <Button
@@ -80,12 +78,6 @@ export default function StorePage() {
               {category}
             </Button>
           ))}
-          <Button
-            variant="outline"
-            className="rounded-full px-3 py-2 border border-neutral-800 text-white hover:bg-neutral-800"
-          >
-            <SlidersHorizontal size={18} />
-          </Button>
         </div>
 
         {/* Business Grid */}

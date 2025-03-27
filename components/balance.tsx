@@ -3,6 +3,7 @@
 import { useReadPyUsdBalanceOf } from "@/app/generated";
 import { toBalance } from "@/lib/utils";
 import React from "react";
+import { sepolia } from "viem/chains";
 import { useAccount, useBlockNumber } from "wagmi";
 
 export const ShowBalance = () => {
@@ -11,6 +12,7 @@ export const ShowBalance = () => {
     watch: true,
   });
   const balance = useReadPyUsdBalanceOf({
+    chainId: sepolia.id,
     args: [account.address!],
     query: {
       enabled: !!account.address,
