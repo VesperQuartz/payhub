@@ -2,11 +2,14 @@ import {
   InsertBusinessProfile,
   InsertCategory,
   InsertProduct,
+  InsertReview,
   InsertTransaction,
   InsertUser,
+  Review,
   SelectBusinessProfile,
   SelectCategory,
   SelectProduct,
+  SelectReview,
   SelectTransaction,
   SelectUser,
   StoreInfoProduct,
@@ -115,6 +118,7 @@ export const useGetProductByMerchantAddress = (
 ) => {
   return useQuery({
     queryKey: ["product", merchantAddress],
+    enabled: !!merchantAddress,
     queryFn: async () => {
       const [error, response] = await to(
         ky.get(`/api/product/${merchantAddress}`),
@@ -126,7 +130,6 @@ export const useGetProductByMerchantAddress = (
       }
       return response.json<SelectProduct[]>();
     },
-    enabled: !!merchantAddress,
   });
 };
 
@@ -150,6 +153,7 @@ export const useGetCategoryByMerchantAddress = (
 ) => {
   return useQuery({
     queryKey: ["category", merchantAddress],
+    enabled: !!merchantAddress,
     queryFn: async () => {
       const [error, response] = await to(
         ky.get(`/api/category/${merchantAddress}`),
@@ -207,6 +211,7 @@ export const useGetTransactionByMerchantAddress = (
 ) => {
   return useQuery({
     queryKey: ["transaction", merchantAddress],
+    enabled: !!merchantAddress,
     queryFn: async () => {
       const [error, response] = await to(
         ky.get(`/api/transaction/${merchantAddress}`),
@@ -226,6 +231,7 @@ export const useGetTransactionByCustomerAddress = (
 ) => {
   return useQuery({
     queryKey: ["transaction", customerAddress],
+    enabled: !!customerAddress,
     queryFn: async () => {
       const [error, response] = await to(
         ky.get(`/api/transaction/users/${customerAddress}`),
@@ -239,6 +245,7 @@ export const useGetTransactionByCustomerAddress = (
     },
   });
 };
+
 export const useGetStoreProduct = () => {
   return useQuery({
     queryKey: ["store"],
@@ -250,6 +257,65 @@ export const useGetStoreProduct = () => {
         throw new Error(message.error);
       }
       return response.json<StoreInfoProduct[]>();
+    },
+  });
+};
+
+export const useAddReview = () => {
+  return useMutation({
+    mutationKey: ["review"],
+    mutationFn: async (payload: InsertReview) => {
+      const [error, response] = await to(
+        ky.post("/api/reviews", {
+          json: payload,
+        }),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<SelectReview>();
+    },
+  });
+};
+
+export const useGetProductReview = (
+  merchantAddress: `0x${string}` | undefined,
+) => {
+  return useQuery({
+    queryKey: ["review", merchantAddress],
+    enabled: !!merchantAddress,
+    queryFn: async () => {
+      const [error, response] = await to(
+        ky.get(`/api/reviews/${merchantAddress}`),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<Review | undefined>();
+    },
+  });
+};
+
+export const useGetBusinessByMerchantAddress = (
+  merchantAddress: `0x${string}` | undefined,
+) => {
+  return useQuery({
+    enabled: !!merchantAddress,
+    queryKey: ["business", merchantAddress],
+    queryFn: async () => {
+      const [error, response] = await to(
+        ky.get(`/api/business/${merchantAddress}`),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<SelectBusinessProfile>();
     },
   });
 };

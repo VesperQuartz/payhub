@@ -11,18 +11,17 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+const wallet = [
+  {
+    icon: <WalletMetamask variant="branded" size="24" />,
+  },
+  {
+    icon: <WalletCoinbase variant="branded" size="24" />,
+  },
+];
 
 export function WalletOptions() {
   const { connectors, connect } = useConnect();
-  const wallet = [
-    {
-      icon: <WalletMetamask variant="branded" size="24" />,
-    },
-    {
-      icon: <WalletCoinbase variant="branded" size="24" />,
-    },
-  ];
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -32,9 +31,9 @@ export function WalletOptions() {
         <DialogHeader>
           <DialogTitle>Wallet Connect</DialogTitle>
         </DialogHeader>
-        {connectors.map((connector, index) => (
+        {connectors?.map((connector, index) => (
           <WalletOption
-            icon={wallet[index].icon}
+            icon={wallet[index]?.icon}
             key={connector.uid}
             connector={connector}
             onClick={() => connect({ connector })}

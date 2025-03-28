@@ -1,17 +1,35 @@
 "use client";
 
-import { useState } from "react";
-import { MapPin, Star, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import {
+  MapPin,
+  Star,
+  ChevronRight,
+  Send,
+  Stars,
+  Loader2Icon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams, useRouter } from "next/navigation";
-import { useGetStoreProduct } from "@/app/hooks/api";
+import {
+  useAddReview,
+  useGetProductReview,
+  useGetStoreProduct,
+} from "@/app/hooks/api";
 import { SelectProduct } from "@/app/database/schema";
 import Image from "next/image";
 import { useAccount } from "wagmi";
 import { usePaymentInfoStore } from "@/app/store";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toEthAddress } from "@/lib/utils";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const BusinessPage = () => {
+  const [rating, setRating] = React.useState(0);
+  const [comment, setComment] = React.useState("");
   const [selectedProduct, setSelectedProduct] = useState<SelectProduct | null>(
     null,
   );
@@ -39,6 +57,57 @@ const BusinessPage = () => {
       });
       router.push("/store/payment/connect");
     }
+  };
+  const queryClient = useQueryClient();
+
+  const productReview = useGetProductReview(businessAddress);
+  const review = useAddReview();
+  const ratings = React.useMemo(
+    () => productReview.data?.reviews?.map((rev) => rev.ratings),
+    [productReview.data?.reviews],
+  );
+  const groupRatings = React.useMemo(() => {
+    let temp = [0, 0];
+    const map = new Map();
+    ratings?.forEach((rating) => {
+      if (map.has(rating)) {
+        map.set(rating, map.get(rating) + 1);
+      } else {
+        map.set(rating, 1);
+      }
+    });
+    for (const [x, y] of map) {
+      temp = [(temp[0] += x * y), (temp[1] += y)];
+    }
+    return temp[0] / temp[1];
+  }, [ratings]);
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rating === 0) {
+      toast.warning("Please rate the business");
+      return;
+    }
+    review.mutate(
+      {
+        ratings: rating,
+        review: comment,
+        walletAddress: address!,
+        merchantAddress: businessAddress!,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Review submitted successfully");
+          setRating(0);
+          setComment("");
+          queryClient.invalidateQueries({
+            queryKey: ["review", businessAddress],
+          });
+        },
+        onError: () => {
+          toast.error("Failed to submit review - You can only rate once");
+        },
+      },
+    );
   };
 
   return (
@@ -76,7 +145,9 @@ const BusinessPage = () => {
               </div>
               <div className="flex items-center">
                 <Star size={18} className="text-emerald-400 mr-2" />
-                <span className="flex items-center">{business?.ratings}</span>
+                <span className="flex items-center">
+                  {String(groupRatings) ?? 0}
+                </span>
               </div>
             </div>
           </div>
@@ -164,9 +235,103 @@ const BusinessPage = () => {
             <TabsContent value="reviews" className="pt-6">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">Customer Reviews</h2>
-                <p className="text-neutral-300">
-                  Reviews will be displayed here.
-                </p>
+                <Card className="mb-8 bg-zinc-800 border-zinc-700">
+                  <CardHeader>
+                    <CardTitle className="text-white">Write a Review</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleSubmitReview} className="space-y-4">
+                      <div>
+                        <label
+                          htmlFor="rating"
+                          className="block mb-2 text-white"
+                        >
+                          Rating
+                        </label>
+                        <div className="flex gap-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setRating(star)}
+                              className="focus:outline-none"
+                            >
+                              <Stars
+                                className={`w-8 h-8 ${rating >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-500"}`}
+                              />
+                              <span className="sr-only">Rate {star} stars</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="comment"
+                          className="block mb-2 text-white"
+                        >
+                          Your Review
+                        </label>
+                        <Textarea
+                          id="comment"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          placeholder="Share your experience..."
+                          className="min-h-[100px] bg-zinc-900 border-zinc-700 text-white placeholder:text-white"
+                          required
+                        />
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        {review.isPending ? (
+                          <Loader2Icon className="animate-spin" />
+                        ) : (
+                          "Submit Review"
+                        )}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+                {(productReview.data?.reviews?.length ?? 0 > 0) ? (
+                  <div className="space-y-4">
+                    {productReview.data?.reviews?.map((review) => (
+                      <Card
+                        key={review.id}
+                        className="bg-zinc-800 border-zinc-700"
+                      >
+                        <CardContent className="pt-6">
+                          <div className="flex flex-col sm:flex-row justify-between mb-2">
+                            <div>
+                              <p className="text-xs text-zinc-400 font-mono">
+                                {toEthAddress(review.walletAddress ?? "0x0")}
+                              </p>
+                            </div>
+                            <div className="flex mt-2 sm:mt-0">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${i < review.ratings ? "fill-yellow-400 text-yellow-400" : "text-zinc-500"}`}
+                                />
+                              ))}
+                              <span className="text-xs text-zinc-400 ml-2 self-center">
+                                {review.createdAt}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-zinc-300 mt-2">{review.review}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-center text-zinc-400">
+                    Reviews will be displayed here.
+                  </p>
+                )}
               </div>
             </TabsContent>
           </Tabs>

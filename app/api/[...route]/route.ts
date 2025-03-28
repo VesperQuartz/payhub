@@ -6,6 +6,7 @@ import {
   CategoryInsertSchema,
   ProductInsertSchema,
   ProductUpdateSchema,
+  ReviewInsertSchema,
   TransactionInsertSchema,
   UserInsertSchema,
 } from "@/app/database/schema";
@@ -17,6 +18,7 @@ import { ProductRepository } from "@/app/database/repoistory/product";
 import { CategoryRepository } from "@/app/database/repoistory/category";
 import { TransactionRepository } from "@/app/database/repoistory/payment";
 import { StoreRepository } from "@/app/database/repoistory/store";
+import { ReviewRepository } from "@/app/database/repoistory/review";
 
 export const maxDuration = 30;
 
@@ -68,6 +70,27 @@ app.post(
     const payload = c.req.valid("json");
     const business = new BusinessRepository();
     const [error, result] = await to(business.save(payload));
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json(result);
+  },
+);
+
+app.get(
+  "/business/:merchantAddress",
+  zValidator(
+    "param",
+    z.object({
+      merchantAddress: z.custom<`0x${string}`>(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const business = new BusinessRepository();
+    const [error, result] = await to(
+      business.findBusinessByMerchantAddress(payload.merchantAddress),
+    );
     if (error) {
       return c.json({ error: error.message }, 500);
     }
@@ -244,6 +267,37 @@ app.get(
     const payment = new TransactionRepository();
     const [error, result] = await to(
       payment.findTransactionByCustomerAddress(payload.customerAddress),
+    );
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json(result);
+  },
+);
+
+app.post("/reviews", zValidator("json", ReviewInsertSchema), async (c) => {
+  const payload = c.req.valid("json");
+  const review = new ReviewRepository();
+  const [error, result] = await to(review.save(payload));
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+  return c.json(result);
+});
+
+app.get(
+  "/reviews/:merchantAddress",
+  zValidator(
+    "param",
+    z.object({
+      merchantAddress: z.custom<`0x${string}`>(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const productReview = new ReviewRepository();
+    const [error, result] = await to(
+      productReview.findReviewByBusinessAddress(payload.merchantAddress),
     );
     if (error) {
       return c.json({ error: error.message }, 500);

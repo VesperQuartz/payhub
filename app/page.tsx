@@ -25,10 +25,10 @@ const Home = () => {
 
         <div className="flex items-center gap-4">
           <Link
-            href="#connect"
+            href="/merchant/dashboard"
             className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2 transition-colors"
           >
-            Connect Wallet <span className="text-xl">›</span>
+            Merchant Login <span className="text-xl">›</span>
           </Link>
           <Link
             href="/register"
@@ -83,7 +83,7 @@ const Home = () => {
           </Link>
 
           <Link
-            href="#customers"
+            href="/store"
             className="border-2 border-white hover:bg-white/10 text-white px-6 py-3 rounded flex items-center gap-2 transition-colors"
           >
             For Customers <span className="text-xl">›</span>

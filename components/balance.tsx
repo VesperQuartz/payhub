@@ -23,7 +23,7 @@ export const ShowBalance = () => {
   }, [block, balance]);
   return (
     <div>
-      <p>{toBalance(balance.data)}</p>
+      <div>{toBalance(balance.data)}</div>
     </div>
   );
 };

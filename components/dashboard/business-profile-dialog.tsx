@@ -31,7 +31,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useBusinessProfileStore, useUserInfoStore } from "@/app/store";
-import { useAddBusiness } from "@/app/hooks/api";
+import {
+  useAddBusiness,
+  useGetBusinessByMerchantAddress,
+} from "@/app/hooks/api";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import { Textarea } from "../ui/textarea";
@@ -83,6 +86,7 @@ export function BusinessProfileDialog() {
   const business = useAddBusiness();
   const { address } = useAccount();
   const user = useUserInfoStore();
+  const businessProfile = useGetBusinessByMerchantAddress(address!);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -115,7 +119,7 @@ export function BusinessProfileDialog() {
     );
   }
 
-  if (hasSetupProfile) {
+  if (hasSetupProfile || !address || businessProfile.data) {
     return null;
   }
 

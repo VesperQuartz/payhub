@@ -5,9 +5,13 @@ import {
   SelectBusinessProfile,
 } from "../schema";
 import { to } from "await-to-ts";
+import { eq } from "drizzle-orm";
 
 interface BusinessRepositoryImpl {
   save(user: InsertBusinessProfile): Promise<SelectBusinessProfile>;
+  findBusinessByMerchantAddress(
+    address: `0x${string}`,
+  ): Promise<SelectBusinessProfile>;
 }
 
 export class BusinessRepository implements BusinessRepositoryImpl {
@@ -24,6 +28,20 @@ export class BusinessRepository implements BusinessRepositoryImpl {
           businessDescription: payload.businessDescription,
         })
         .returning(),
+    );
+    if (error) {
+      throw error;
+    }
+    return business[0];
+  }
+  async findBusinessByMerchantAddress(
+    address: `0x${string}`,
+  ): Promise<SelectBusinessProfile> {
+    const [error, business] = await to(
+      db
+        .select()
+        .from(businessProfileTable)
+        .where(eq(businessProfileTable.merchantAddress, address)),
     );
     if (error) {
       throw error;

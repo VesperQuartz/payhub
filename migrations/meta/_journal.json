@@ -50,6 +50,41 @@
       "when": 1742872601023,
       "tag": "0006_even_whizzer",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1743079674168,
+      "tag": "0007_volatile_trish_tilby",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1743080709491,
+      "tag": "0008_awesome_stepford_cuckoos",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1743084191316,
+      "tag": "0009_violet_black_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1743089395741,
+      "tag": "0010_shocking_clint_barton",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1743091486235,
+      "tag": "0011_superb_nekra",
+      "breakpoints": true
     }
   ]
 }

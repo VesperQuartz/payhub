@@ -51,6 +51,23 @@ export const productTable = sqliteTable("products", {
     .notNull(),
 });
 
+export const reviewTable = sqliteTable("reviews", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  review: text("review"),
+  ratings: integer("ratings").notNull().default(1),
+  walletAddress: text("wallet_address")
+    .$type<`0x${string}`>()
+    .unique()
+    .references(() => userTable.walletAddress),
+  merchantAddress: text("merchant_address")
+    .$type<`0x${string}`>()
+    .references(() => businessProfileTable.merchantAddress),
+  updateAt: text("updated_at").$onUpdate(() => new Date().toISOString()),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
 export const transactionTable = sqliteTable("transactions", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   productName: text("product_name").notNull(),
@@ -104,6 +121,20 @@ export const productTableRelation = relations(productTable, ({ one }) => ({
   }),
 }));
 
+export const businessReviewRelation = relations(
+  businessProfileTable,
+  ({ many }) => ({
+    reviews: many(reviewTable),
+  }),
+);
+
+export const reviewBusinessRelation = relations(reviewTable, ({ one }) => ({
+  merchant: one(businessProfileTable, {
+    fields: [reviewTable.merchantAddress],
+    references: [businessProfileTable.merchantAddress],
+  }),
+}));
+
 export type InsertUser = typeof userTable.$inferInsert;
 export type SelectUser = typeof userTable.$inferSelect;
 export const UserInsertSchema = createInsertSchema(userTable, {
@@ -147,5 +178,17 @@ export const ProductUpdateSchema = createUpdateSchema(productTable, {
 
 export type UpdateProduct = z.infer<typeof ProductUpdateSchema>;
 export type StoreInfoProduct = SelectBusinessProfile & {
-  product: SelectProduct[];
+  product?: SelectProduct[];
+};
+
+export type InsertReview = typeof reviewTable.$inferInsert;
+export type SelectReview = typeof reviewTable.$inferSelect;
+export const ReviewInsertSchema = createInsertSchema(reviewTable, {
+  walletAddress: z.custom<`0x${string}`>(),
+  ratings: z.coerce.number(),
+  merchantAddress: z.custom<`0x${string}`>(),
+});
+
+export type Review = typeof businessProfileTable.$inferSelect & {
+  reviews?: SelectReview[];
 };

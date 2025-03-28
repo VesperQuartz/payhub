@@ -1,0 +1,1 @@
+ALTER TABLE `reviews` RENAME COLUMN "eallet_address" TO "wallet_address";

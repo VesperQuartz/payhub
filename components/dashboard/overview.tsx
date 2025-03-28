@@ -1,5 +1,5 @@
 "use client";
-import SalesAnalytics from "./sales-analytics";
+import { SalesAnalytics } from "./sales-analytics";
 import StatCard from "./stat-card";
 import TopCustomersTable from "./top-customers-table";
 import TransactionsTable from "./transactions-table";

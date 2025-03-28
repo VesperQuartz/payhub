@@ -66,7 +66,6 @@ const TransactionsTable = ({
             <TableHead>Price</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -86,27 +85,6 @@ const TransactionsTable = ({
                   >
                     {statusStyles?.label}
                   </span>
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="bg-neutral-900 text-white"
-                    >
-                      <DropdownMenuItem className="hover:bg-neutral-800">
-                        View details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:bg-neutral-800">
-                        Download receipt
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             );

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `reviews_wallet_address_unique` ON `reviews` (`wallet_address`);
