@@ -38,7 +38,7 @@ export const productTable = sqliteTable("products", {
   productName: text("name").notNull(),
   productDescription: text("description").notNull(),
   productPrice: numeric("amount", { mode: "number" }).notNull(),
-  productCategory: text("category").unique(),
+  productCategory: text("category").notNull(),
   stock: integer("stock").notNull(),
   merchantAddress: text("merchant_address")
     .$type<`0x${string}`>()

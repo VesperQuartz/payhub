@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Copy, RefreshCw } from "lucide-react";
+import React, { useState } from "react";
+import { Check, Copy, QrCode, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -23,6 +23,7 @@ import { toEthAddress } from "@/lib/utils";
 import { formatUnits } from "viem";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useReactToPrint } from "react-to-print";
 
 enum MonitoringState {
   NOT_STARTED = "not_started",
@@ -135,12 +136,16 @@ export default function QRPaymentPage() {
   const paymentData = paymentAmount
     ? `ethereum:${contractAddress}@11155111/transfer?address=${address}&uint256=${Number(paymentAmount) * 1e6}`
     : "";
-  console.log(paymentData);
+
+  const qrRef = React.useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef: qrRef });
+  const handlePrintQr = () => {
+    reactToPrintFn();
+  };
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Payment QR Code Section */}
         <div className="border border-neutral-800 rounded-lg p-6 bg-black">
           <h2 className="text-xl font-semibold mb-1">Payment QR Code</h2>
           <p className="text-neutral-400 text-sm mb-4">
@@ -203,7 +208,7 @@ export default function QRPaymentPage() {
 
           {paymentAmount ? (
             <div className="mt-6 flex flex-col items-center">
-              <div className="bg-white p-4 rounded-lg mb-4">
+              <div ref={qrRef} className="bg-white p-4 rounded-lg mb-4">
                 <QRCode data={paymentData} size={200} />
               </div>
               <p className="text-sm text-neutral-400 text-center mb-4">
@@ -225,6 +230,16 @@ export default function QRPaymentPage() {
                     className="ml-2 text-neutral-400"
                   >
                     <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="mt-4 flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="border-neutral-800 text-white  bg-[#FF6B00] hover:bg-[#E05E00]"
+                    onClick={handlePrintQr}
+                  >
+                    <QrCode className="mr-2 h-4 w-4" />
+                    Print QR
                   </Button>
                 </div>
               </div>

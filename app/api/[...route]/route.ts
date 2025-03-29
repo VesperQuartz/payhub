@@ -209,6 +209,27 @@ app.get(
   },
 );
 
+app.get(
+  "/category/product/:merchantAddress",
+  zValidator(
+    "param",
+    z.object({
+      merchantAddress: z.custom<`0x{string}`>(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const category = new CategoryRepository();
+    const [error, result] = await to(
+      category.findAllProductCategory(payload.merchantAddress),
+    );
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json(result);
+  },
+);
+
 app.post("/category", zValidator("json", CategoryInsertSchema), async (c) => {
   const payload = c.req.valid("json");
   const category = new CategoryRepository();

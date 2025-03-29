@@ -1,9 +1,10 @@
 "use client";
 
-import { Download, QrCode, ShieldAlert } from "lucide-react";
+import { QrCode, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "wagmi";
 import Link from "next/link";
+import React from "react";
 
 export const PaymentDetails = () => {
   const { address } = useAccount();
@@ -64,23 +65,6 @@ export const PaymentDetails = () => {
         <h3 className="text-xl font-semibold">Your Payment Address</h3>
         <div className="mt-2 p-3 bg-neutral-900 rounded-md font-mono text-sm break-all">
           {address ? address : null}
-        </div>
-
-        <div className="mt-4 flex gap-3">
-          <Button
-            variant="outline"
-            className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Download QR
-          </Button>
-          <Button
-            variant="outline"
-            className="border-neutral-800 text-white  bg-[#FF6B00] hover:bg-[#E05E00]"
-          >
-            <QrCode className="mr-2 h-4 w-4" />
-            Print QR
-          </Button>
         </div>
       </div>
     </div>

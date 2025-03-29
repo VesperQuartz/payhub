@@ -1,0 +1,1 @@
+DROP INDEX `products_category_unique`;

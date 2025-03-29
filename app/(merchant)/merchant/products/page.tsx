@@ -43,8 +43,8 @@ import { CategoryCard } from "@/components/products/category-card";
 import { AddCategoryDialog } from "@/components/products/add-category-dialog";
 import {
   useAddProduct,
+  useAllCategoryProduct,
   useDeleteProductById,
-  useGetCategoryByMerchantAddress,
   useGetProductByMerchantAddress,
   useUpdateProduct,
 } from "@/app/hooks/api";
@@ -119,6 +119,9 @@ const ProductsPage = () => {
             queryClient.invalidateQueries({
               queryKey: ["product", address!],
             });
+            queryClient.invalidateQueries({
+              queryKey: ["product-category", address!],
+            });
             toast.success("Product updated successfully");
             setEditingProduct(null);
             form.reset();
@@ -140,6 +143,9 @@ const ProductsPage = () => {
             queryClient.invalidateQueries({
               queryKey: ["product", address!],
             });
+            queryClient.invalidateQueries({
+              queryKey: ["product-category", address!],
+            });
             toast.success("Product added successfully");
             setIsAddProductOpen(false);
             form.reset();
@@ -149,7 +155,7 @@ const ProductsPage = () => {
     }
   }
 
-  const categories = useGetCategoryByMerchantAddress(address!);
+  const categories = useAllCategoryProduct(address!);
   const handleEditProduct = (product: SelectProduct) => {
     setEditingProduct(product);
     form.reset({
@@ -170,7 +176,6 @@ const ProductsPage = () => {
     }
   };
 
-  // onUpdateStock?: (id: number, newStock: number) => void,
   const handleUpdateStock = (product: SelectProduct, newStock: number) => {
     updateProduct.mutate(
       {

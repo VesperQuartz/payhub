@@ -1,11 +1,5 @@
-import { ChevronDown, ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,

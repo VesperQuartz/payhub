@@ -319,3 +319,50 @@ export const useGetBusinessByMerchantAddress = (
     },
   });
 };
+
+export const useAllCategoryProduct = (
+  merchantAddress: `0x${string}` | undefined,
+) => {
+  return useQuery({
+    queryKey: ["product-category", merchantAddress],
+    enabled: !!merchantAddress,
+    queryFn: async () => {
+      const [error, response] = await to(
+        ky.get(`/api/category/product/${merchantAddress}`),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+
+      type ApiResponseItem = {
+        products: SelectProduct;
+        category: SelectCategory;
+      };
+
+      type GroupedCategory = SelectCategory & {
+        products: SelectProduct[];
+      };
+
+      const result = await response.json<ApiResponseItem[]>();
+
+      const data: GroupedCategory[] = [];
+      const categoryMap: Record<number, number> = {};
+
+      for (const item of result) {
+        const categoryId = item.category.id;
+        if (categoryId in categoryMap) {
+          data[categoryMap[categoryId]].products.push(item.products);
+        } else {
+          categoryMap[categoryId] = data.length;
+          data.push({
+            ...item.category,
+            products: item.products ? [item.products] : [],
+          });
+        }
+      }
+      return data;
+    },
+  });
+};

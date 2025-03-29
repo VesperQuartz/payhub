@@ -59,12 +59,16 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
           }`}
         >
           <div className="flex items-center gap-2 p-4 h-16">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#FF6B00]">
-              <CircleDollarSign className="h-5 w-5 text-white" />
-            </div>
-            {sidebarOpen && (
-              <span className="text-lg font-semibold">PayHub</span>
-            )}
+            <Link href="/">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#FF6B00]">
+                <CircleDollarSign className="h-5 w-5 text-white" />
+              </div>
+            </Link>
+            <Link href="/">
+              {sidebarOpen && (
+                <span className="text-lg font-semibold">PayHub</span>
+              )}
+            </Link>
             <Button
               variant="ghost"
               size="icon"

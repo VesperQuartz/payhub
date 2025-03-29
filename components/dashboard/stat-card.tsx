@@ -31,7 +31,7 @@ const StatCard = ({
       <div className="space-y-2">
         <p className="text-sm text-neutral-400">{title}</p>
         <div className="flex gap-5 justify-between">
-          <div className={`text-3xl font-bold ${valueColor}`}>
+          <div className={`text-3xl flex gap-[0.5] font-bold ${valueColor}`}>
             {title === "Your Balance" ? (
               <>
                 $ <ShowBalance />

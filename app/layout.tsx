@@ -6,7 +6,6 @@ import "./globals.css";
 import "@bprogress/core/css";
 import { AsyncProvider } from "./providers/async-provider";
 import { ThemeProvider } from "./providers/theme-provider";
-import { ProgressProviders } from "./providers/progress";
 
 const space = Space_Grotesk({
   subsets: ["latin"],
@@ -29,19 +28,17 @@ export default function RootLayout({
         className={`${space.className} antialiased`}
         suppressHydrationWarning
       >
-        <ProgressProviders>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NuqsAdapter>
-              <AsyncProvider>{children}</AsyncProvider>
-            </NuqsAdapter>
-            <Toaster />
-          </ThemeProvider>
-        </ProgressProviders>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NuqsAdapter>
+            <AsyncProvider>{children}</AsyncProvider>
+          </NuqsAdapter>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

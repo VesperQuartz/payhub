@@ -63,6 +63,9 @@ export function AddCategoryDialog({
           queryClient.invalidateQueries({
             queryKey: ["category", address],
           });
+          queryClient.invalidateQueries({
+            queryKey: ["product-category", address],
+          });
           toast.success("Category added successfully.");
         },
       },
