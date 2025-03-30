@@ -4,6 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import {
   BusinessProfileInsertSchema,
   CategoryInsertSchema,
+  DisputeInsertSchema,
   ProductInsertSchema,
   ProductUpdateSchema,
   ReviewInsertSchema,
@@ -19,6 +20,7 @@ import { CategoryRepository } from "@/app/database/repoistory/category";
 import { TransactionRepository } from "@/app/database/repoistory/payment";
 import { StoreRepository } from "@/app/database/repoistory/store";
 import { ReviewRepository } from "@/app/database/repoistory/review";
+import { DisputeRepository } from "@/app/database/repoistory/dispute";
 
 export const maxDuration = 30;
 
@@ -108,25 +110,6 @@ app.post("/product", zValidator("json", ProductInsertSchema), async (c) => {
   return c.json(result);
 });
 
-// app.get(
-//   "/product/:id",
-//   zValidator(
-//     "param",
-//     z.object({
-//       id: z.number(),
-//     }),
-//   ),
-//   async (c) => {
-//     const payload = c.req.valid("param");
-//     const product = new ProductRepository();
-//     const [error] = await to(product.deleteProductById(payload.id));
-//     if (error) {
-//       return c.json({ error: error.message }, 500);
-//     }
-//     return c.json({ message: "Product deleted" });
-//   },
-// );
-//
 app.put(
   "/product/:id",
   zValidator(
@@ -335,6 +318,37 @@ app.get("/store", async (c) => {
   }
   return c.json(result);
 });
+
+app.post("/disputes", zValidator("json", DisputeInsertSchema), async (c) => {
+  const payload = c.req.valid("json");
+  const dispute = new DisputeRepository();
+  const [error, result] = await to(dispute.save(payload));
+  if (error) {
+    return c.json({ error: error.message }, 500);
+  }
+  return c.json(result);
+});
+
+app.get(
+  "/disputes/:merchantAddress",
+  zValidator(
+    "param",
+    z.object({
+      merchantAddress: z.custom<`0x${string}`>(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const dispute = new DisputeRepository();
+    const [error, result] = await to(
+      dispute.findDisputeByMerchantAddress(payload.merchantAddress),
+    );
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json(result);
+  },
+);
 
 export const GET = handle(app);
 export const POST = handle(app);

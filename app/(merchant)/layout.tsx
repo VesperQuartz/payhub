@@ -134,9 +134,9 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
                 {sidebarOpen && <span>Security</span>}
               </Link>
               <Link
-                href="dispute"
+                href="disputes"
                 className={`${
-                  isActive("/merchant/dispute")
+                  isActive("/merchant/disputes")
                     ? "bg-neutral-800 text-white"
                     : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
                 } flex items-center px-2 py-2 text-sm font-medium rounded-md text-neutral-300 hover:bg-neutral-800 hover:text-white`}
@@ -161,19 +161,6 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
                   className={`h-5 w-5 ${!sidebarOpen ? "mx-auto" : "mr-3"}`}
                 />
                 {sidebarOpen && <span>Settings</span>}
-              </Link>
-              <Link
-                href="support"
-                className={`${
-                  isActive("/merchant/support")
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                } flex items-center px-2 py-2 text-sm font-medium rounded-md text-neutral-300 hover:bg-neutral-800 hover:text-white`}
-              >
-                <CircleDollarSign
-                  className={`h-5 w-5 ${!sidebarOpen ? "mx-auto" : "mr-3"}`}
-                />
-                {sidebarOpen && <span>Support</span>}
               </Link>
               <Button
                 variant="link"

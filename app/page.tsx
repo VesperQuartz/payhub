@@ -5,6 +5,13 @@ import Image from "next/image";
 const Home = () => {
   return (
     <div className="h-screen bg-black text-white overflow-clip bg-gradient-to-b from-black via-black to-[#FF6B00]">
+      <header className="flex items-center justify-center gap-2 p-1">
+        <Image src="/cloud.png" width={30} height={30} alt="google" />{" "}
+        <span className="font-semibold">
+          Powered by Google Blockchain RPC and PayPal USD
+        </span>
+        <Image src="/pyusd.png" width={30} height={30} alt="pyusd" />
+      </header>
       <header className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="text-2xl font-serif italic font-bold">PAYHUB</div>
 
@@ -40,13 +47,13 @@ const Home = () => {
       </header>
 
       <main className="container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-4xl mx-auto">
+        <h1 className="text-4xl md:text-6xl font-bold mb-4 max-w-4xl mx-auto">
           <span className="text-emerald-400 italic">Instant</span> and{" "}
           <span className="text-emerald-400 italic">Secure</span> Payments, No
           Complexity
         </h1>
 
-        <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-10">
+        <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">
           For businesses and buyers: Accept PYUSD payments, track sales, and
           protect purchases effortlessly
         </p>
@@ -74,7 +81,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
           <Link
             href="/register"
             className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded flex items-center gap-2 transition-colors"

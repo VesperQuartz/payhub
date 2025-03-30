@@ -1,6 +1,7 @@
 import {
   InsertBusinessProfile,
   InsertCategory,
+  InsertDispute,
   InsertProduct,
   InsertReview,
   InsertTransaction,
@@ -8,6 +9,7 @@ import {
   Review,
   SelectBusinessProfile,
   SelectCategory,
+  SelectDispute,
   SelectProduct,
   SelectReview,
   SelectTransaction,
@@ -363,6 +365,45 @@ export const useAllCategoryProduct = (
         }
       }
       return data;
+    },
+  });
+};
+
+export const useAddDispute = () => {
+  return useMutation({
+    mutationKey: ["dispute"],
+    mutationFn: async (payload: InsertDispute) => {
+      const [error, response] = await to(
+        ky.post("/api/disputes", {
+          json: payload,
+        }),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<SelectDispute>();
+    },
+  });
+};
+
+export const useGetDisputeByMerchantAddress = (
+  merchantAddress: `0x${string}` | undefined,
+) => {
+  return useQuery({
+    enabled: !!merchantAddress,
+    queryKey: ["dispute", merchantAddress],
+    queryFn: async () => {
+      const [error, response] = await to(
+        ky.get(`/api/disputes/${merchantAddress}`),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<SelectDispute[]>();
     },
   });
 };

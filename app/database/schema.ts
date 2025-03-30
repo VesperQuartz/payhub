@@ -92,6 +92,26 @@ export const transactionTable = sqliteTable("transactions", {
     .notNull(),
 });
 
+export const disputeTable = sqliteTable("dispute", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  txHash: text("tx_hash").$type<`0x${string}`>().notNull(),
+  customerAddress: text("customer_address").$type<`0x${string}`>().notNull(),
+  productName: text("product_name").notNull(),
+  price: integer("amount").notNull(),
+  issue: text("issue").notNull(),
+  resolution: text("resulotion").notNull(),
+  merchantAddress: text("merchant_address")
+    .$type<`0x${string}`>()
+    .references(() => businessProfileTable.merchantAddress)
+    .notNull(),
+  updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date(),
+  ),
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+});
+
 export const categoryTable = sqliteTable("category", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
@@ -187,6 +207,14 @@ export const ReviewInsertSchema = createInsertSchema(reviewTable, {
   walletAddress: z.custom<`0x${string}`>(),
   ratings: z.coerce.number(),
   merchantAddress: z.custom<`0x${string}`>(),
+});
+
+export type InsertDispute = typeof disputeTable.$inferInsert;
+export type SelectDispute = typeof disputeTable.$inferSelect;
+export const DisputeInsertSchema = createInsertSchema(disputeTable, {
+  merchantAddress: z.custom<`0x${string}`>(),
+  customerAddress: z.custom<`0x${string}`>(),
+  txHash: z.custom<`0x${string}`>(),
 });
 
 export type Review = typeof businessProfileTable.$inferSelect & {

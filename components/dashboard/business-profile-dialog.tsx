@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ChevronRight, Loader } from "lucide-react";
@@ -80,8 +80,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function BusinessProfileDialog() {
-  const [open, setOpen] = useState(true);
+export const BusinessProfileDialog = () => {
+  const [open, setOpen] = React.useState(true);
   const { hasSetupProfile, setProfile } = useBusinessProfileStore();
   const business = useAddBusiness();
   const { address } = useAccount();
@@ -119,7 +119,13 @@ export function BusinessProfileDialog() {
     );
   }
 
-  if (hasSetupProfile || !address || businessProfile.data) {
+  if (
+    hasSetupProfile ||
+    !address ||
+    businessProfile?.data ||
+    businessProfile.isLoading ||
+    businessProfile.isPending
+  ) {
     return null;
   }
 
@@ -284,4 +290,4 @@ export function BusinessProfileDialog() {
       </DialogContent>
     </Dialog>
   );
-}
+};
