@@ -70,22 +70,22 @@ export function ProductTable<TData, TValue>({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           <Input
             placeholder="Search products..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10 border-neutral-800 bg-neutral-900 text-white"
+            className="pl-10 border-gray-800 bg-gray-900 text-white placeholder:text-gray-500"
           />
         </div>
       </div>
-      <div className="rounded-md border border-neutral-800">
+      <div className="rounded-md border border-gray-800">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-neutral-800 hover:bg-transparent"
+                className="border-gray-800 hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -94,7 +94,7 @@ export function ProductTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -107,13 +107,13 @@ export function ProductTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-neutral-800 hover:bg-neutral-900/50"
+                  className="border-gray-800 hover:bg-gray-900/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -138,7 +138,7 @@ export function ProductTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+          className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
         >
           Previous
         </Button>
@@ -147,7 +147,7 @@ export function ProductTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+          className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
         >
           Next
         </Button>
@@ -158,7 +158,7 @@ export function ProductTable<TData, TValue>({
 
 export function getProductColumns(
   onEdit?: (product: SelectProduct) => void,
-  onDelete?: (product: SelectProduct) => void,
+  onDelete?: (product: SelectProduct) => void
 ): ColumnDef<SelectProduct>[] {
   return [
     {
@@ -221,11 +221,11 @@ export function getProductColumns(
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-neutral-900 text-white border-neutral-800"
+                className="bg-gray-900 text-white border-gray-800"
               >
                 {onEdit && (
                   <DropdownMenuItem
-                    className="hover:bg-neutral-800"
+                    className="hover:bg-gray-800"
                     onClick={() => onEdit(product)}
                   >
                     Edit
@@ -233,7 +233,7 @@ export function getProductColumns(
                 )}
                 {onDelete && (
                   <DropdownMenuItem
-                    className="text-red-500 hover:bg-neutral-800 hover:text-red-500"
+                    className="text-red-500 hover:bg-gray-800 hover:text-red-500"
                     onClick={() => onDelete(product)}
                   >
                     Delete

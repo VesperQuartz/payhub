@@ -62,22 +62,22 @@ export function InventoryTable<TData, TValue>({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-neutral-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
           <Input
             placeholder="Search inventory..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10 border-neutral-800 bg-neutral-900 text-white"
+            className="pl-10 border-gray-800 bg-gray-900 text-white placeholder:text-gray-500"
           />
         </div>
       </div>
-      <div className="rounded-md border border-neutral-800">
+      <div className="rounded-md border border-gray-800">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-neutral-800 hover:bg-transparent"
+                className="border-gray-800 hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => {
                   return (
@@ -86,7 +86,7 @@ export function InventoryTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   );
@@ -99,13 +99,13 @@ export function InventoryTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-neutral-800 hover:bg-neutral-900/50"
+                  className="border-gray-800 hover:bg-gray-900/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -130,7 +130,7 @@ export function InventoryTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+          className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
         >
           Previous
         </Button>
@@ -139,7 +139,7 @@ export function InventoryTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+          className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
         >
           Next
         </Button>
@@ -149,7 +149,7 @@ export function InventoryTable<TData, TValue>({
 }
 
 export function getInventoryColumns(
-  onUpdateStock?: (product: SelectProduct, newStock: number) => void,
+  onUpdateStock?: (product: SelectProduct, newStock: number) => void
 ): ColumnDef<SelectProduct>[] {
   return [
     {
@@ -206,12 +206,12 @@ export function getInventoryColumns(
               onChange={(e) =>
                 setStockValue(Number.parseInt(e.target.value) || 0)
               }
-              className="w-20 h-8 bg-neutral-900 border-neutral-800 text-white"
+              className="w-20 h-8 bg-gray-900 border-gray-800 text-white placeholder:text-gray-500"
             />
             <Button
               variant="outline"
               size="sm"
-              className="h-8 border-neutral-800 text-white hover:bg-neutral-800 bg-[#FF6B00] hover:text-white"
+              className="h-8 border-gray-800 text-white hover:bg-gray-800 bg-orange-500 hover:bg-orange-600"
               onClick={() => {
                 if (onUpdateStock) {
                   onUpdateStock(product, stockValue);

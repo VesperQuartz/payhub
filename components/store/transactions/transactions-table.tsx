@@ -142,13 +142,13 @@ export function TransactionsTable({
 
   return (
     <div>
-      <div className="rounded-md border border-neutral-800 overflow-hidden">
+      <div className="rounded-md border border-gray-800 overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="border-neutral-800 hover:bg-transparent"
+                className="border-gray-800 hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
@@ -156,7 +156,7 @@ export function TransactionsTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -169,13 +169,13 @@ export function TransactionsTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="border-neutral-800 hover:bg-neutral-900/50"
+                  className="border-gray-800 hover:bg-gray-900/50"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -196,7 +196,7 @@ export function TransactionsTable({
       </div>
 
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="text-sm text-neutral-400">
+        <div className="text-sm text-gray-400">
           Showing {table.getRowModel().rows.length} of {transactions.length}{" "}
           transactions
         </div>
@@ -206,7 +206,7 @@ export function TransactionsTable({
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+            className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
           >
             Previous
           </Button>
@@ -215,7 +215,7 @@ export function TransactionsTable({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+            className="border-gray-800 text-white bg-orange-500 hover:bg-orange-600"
           >
             Next
           </Button>

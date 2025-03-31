@@ -10,16 +10,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 dark:bg-white dark:text-black dark:hover:bg-white/90 dark:shadow-md dark:hover:shadow-lg",
+          "bg-orange-500 text-white shadow-xs hover:bg-orange-600 dark:bg-orange-500 dark:text-white dark:hover:bg-orange-600 dark:shadow-md dark:hover:shadow-lg",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-red-500/80 dark:hover:bg-red-500/90 dark:shadow-md dark:hover:shadow-lg",
+          "bg-red-500 text-white shadow-xs hover:bg-red-600 focus-visible:ring-red-500/20 dark:focus-visible:ring-red-500/40 dark:bg-red-500 dark:hover:bg-red-600 dark:shadow-md dark:hover:shadow-lg",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-black/40 dark:border-neutral-700 dark:hover:bg-black/60 dark:hover:border-neutral-600 dark:shadow-md dark:hover:shadow-lg",
+          "border border-gray-700 bg-transparent text-gray-300 shadow-xs hover:bg-gray-800 hover:text-white dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white dark:shadow-md dark:hover:shadow-lg",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:shadow-md dark:hover:shadow-lg",
+          "bg-gray-900 text-white shadow-xs hover:bg-gray-800 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800 dark:shadow-md dark:hover:shadow-lg",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-white/10 dark:hover:text-white dark:hover:shadow-md",
-        link: "text-primary underline-offset-4 hover:underline dark:text-white dark:hover:text-white/80",
+          "hover:bg-gray-800 hover:text-white dark:hover:bg-gray-800 dark:hover:text-white dark:hover:shadow-md",
+        link: "text-orange-500 underline-offset-4 hover:underline dark:text-orange-500 dark:hover:text-orange-400",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
