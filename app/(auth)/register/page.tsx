@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -15,11 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RegisterWalletButton } from "@/components/register-wallet-button";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { toast } from "sonner";
 import { useRegister } from "@/app/hooks/api";
 import { useUserInfoStore } from "@/app/store";
 import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   businessName: z.string().min(2, {
@@ -34,6 +34,7 @@ const MerchantSignup = () => {
   const { address } = useAccount();
   const register = useRegister();
   const user = useUserInfoStore();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,26 +44,37 @@ const MerchantSignup = () => {
     },
   });
 
+  const message = `Verify your wallet with PAYHUB`;
+  const signature = useSignMessage();
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!address) {
       toast.warning("Please connect your wallet first.");
       return;
     }
-    console.log(values, address);
-    register.mutate(
+    signature.signMessage(
+      { message },
       {
-        role: "merchant",
-        businessName: values.businessName,
-        email: values.email,
-        walletAddress: address!,
-      },
-      {
-        onSuccess: (data) => {
-          user.setUserInfo(data);
-          toast.success("Account created successfully.");
-        },
-        onError: (error) => {
-          toast.error(error.message);
+        onSuccess: (payload) => {
+          register.mutate(
+            {
+              role: "merchant",
+              businessName: values.businessName,
+              email: values.email,
+              walletAddress: address!,
+              verifiedSignature: payload,
+            },
+            {
+              onSuccess: (data) => {
+                user.setUserInfo(data);
+                toast.success("Account created successfully.");
+                router.push("/merchant/dashboard");
+              },
+              onError: (error) => {
+                toast.error(error.message);
+              },
+            },
+          );
         },
       },
     );
@@ -134,7 +146,7 @@ const MerchantSignup = () => {
         <Button
           type="submit"
           onClick={form.handleSubmit(onSubmit)}
-          className="w-full bg-[#FF6B00] hover:bg-[#E05E00] text-white py-6 h-auto rounded-md flex items-center justify-center transition-colors"
+          className="w-full bg-[#FF6B00] hover:bg-[#E05E00] text-white py-6 rounded-md flex items-center justify-center transition-colors"
         >
           {register.isPending ? (
             <LoaderCircle className="animate-spin" />

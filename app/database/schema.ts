@@ -8,6 +8,7 @@ export const userTable = sqliteTable("users", {
   businessName: text("business_name"),
   email: text("email").unique(),
   role: text("role").$type<"merchant" | "user">().notNull(),
+  verifiedSignature: text("verified_signature").$type<`0x${string}`>(),
   updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date(),
   ),
@@ -160,6 +161,7 @@ export type SelectUser = typeof userTable.$inferSelect;
 export const UserInsertSchema = createInsertSchema(userTable, {
   role: z.union([z.literal("merchant"), z.literal("user")]),
   walletAddress: z.custom<`0x${string}`>(),
+  verifiedSignature: z.custom<`0x${string}`>().optional(),
 });
 
 export type InsertBusinessProfile = typeof businessProfileTable.$inferInsert;
@@ -215,6 +217,7 @@ export const DisputeInsertSchema = createInsertSchema(disputeTable, {
   merchantAddress: z.custom<`0x${string}`>(),
   customerAddress: z.custom<`0x${string}`>(),
   txHash: z.custom<`0x${string}`>(),
+  price: z.coerce.number(),
 });
 
 export type Review = typeof businessProfileTable.$inferSelect & {

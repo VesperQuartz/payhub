@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -11,34 +10,74 @@ import { TransactionDetails } from "@/components/disputes/transaction-details";
 import { ResolveDispute } from "@/components/disputes/resolve-dispute";
 import { Button } from "@/components/ui/button";
 import { useDebugTraceBlockByNumber } from "@/app/hooks/rpc";
+import { DebugTraceResponse } from "@/lib/custom-client";
+import { toast } from "sonner";
+import { useAddDispute } from "@/app/hooks/api";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
 
 export const DisputeResolutionPage = () => {
+  const { address } = useAccount();
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [blockNo, setTransactionBlk] = useState("");
-  const [transactionDetails, setTransactionDetails] = useState<any>(null);
-  const [_resolution, setResolution] = useState("");
+  const [blockNo, setTransactionBlk] = useState<string | undefined>(undefined);
+  const [transactionDetails, setTransactionDetails] = useState<
+    DebugTraceResponse | undefined
+  >();
 
-  const debugBlock = useDebugTraceBlockByNumber(Number(blockNo));
+  const dispute = useAddDispute();
+  const queryClient = useQueryClient();
+
+  const debugBlock = useDebugTraceBlockByNumber();
 
   const handleVerifyTransaction = (blockNumber: string) => {
     setTransactionBlk(blockNumber);
-    setTransactionDetails(debugBlock?.data);
-    setStep(2);
+    debugBlock.mutate(blockNo?.trim(), {
+      onSuccess: (data) => {
+        setTransactionDetails(data);
+        setStep(2);
+      },
+      onError: () => {
+        setTransactionDetails(undefined);
+        setStep(1);
+        toast.error("Transaction not found");
+      },
+    });
   };
 
-  const handleResolveDispute = (resolution: string) => {
-    setResolution(resolution);
-    // In a real app, this would be an API call to resolve the dispute
-    setStep(1);
-    setTransactionBlk("");
-    setTransactionDetails(null);
+  const handleResolveDispute = (resolution: string, issue: string) => {
+    dispute.mutate(
+      {
+        customerAddress: transactionDetails![0].result.from,
+        issue,
+        resolution,
+        merchantAddress: transactionDetails![0].result
+          .reciever as `0x${string}`,
+        price: transactionDetails![0].result.amount,
+        productName: "N/A",
+        txHash: transactionDetails![0].txHash,
+      },
+      {
+        onSuccess: () => {
+          setStep(1);
+          setTransactionBlk("");
+          setTransactionDetails(undefined);
+          toast.success("Dispute resolved successfully");
+          queryClient.invalidateQueries({
+            queryKey: ["dispute", address],
+          });
+        },
+        onError: (error) => {
+          console.log(error, "An error occurred");
+        },
+      },
+    );
   };
 
   const handleStartNewVerification = () => {
     setStep(1);
     setTransactionBlk("");
-    setTransactionDetails(null);
+    setTransactionDetails(undefined);
   };
 
   return (
@@ -75,8 +114,9 @@ export const DisputeResolutionPage = () => {
 
           {step === 1 && (
             <TransactionVerification
+              isLoading={debugBlock.isPending}
               onVerify={handleVerifyTransaction}
-              blockNo={blockNo}
+              blockNo={blockNo!}
               setTransactionBlockNo={setTransactionBlk}
             />
           )}
@@ -84,11 +124,11 @@ export const DisputeResolutionPage = () => {
           {step === 2 && transactionDetails && (
             <>
               <TransactionDetails details={transactionDetails} />
-
               <ResolveDispute
                 details={transactionDetails}
                 onResolve={handleResolveDispute}
                 onCancel={handleStartNewVerification}
+                isLoading={dispute.isPending}
               />
             </>
           )}

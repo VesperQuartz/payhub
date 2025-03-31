@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Loader2Icon, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -8,12 +8,14 @@ interface TransactionVerificationProps {
   onVerify: (block: string) => void;
   blockNo: string;
   setTransactionBlockNo: (block: string) => void;
+  isLoading?: boolean;
 }
 
 export function TransactionVerification({
   onVerify,
   blockNo,
   setTransactionBlockNo,
+  isLoading,
 }: TransactionVerificationProps) {
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
@@ -31,7 +33,7 @@ export function TransactionVerification({
           <Input
             value={blockNo}
             onChange={(e) => setTransactionBlockNo(e.target.value)}
-            placeholder="Enter transaction hash (0x...)"
+            placeholder="Enter transaction block number (000...)"
             className="pl-10 bg-gray-800 border-gray-700 text-white"
           />
         </div>
@@ -40,7 +42,11 @@ export function TransactionVerification({
           disabled={!blockNo}
           className="bg-orange-500 hover:bg-orange-600"
         >
-          Verify Transaction
+          {isLoading ? (
+            <Loader2Icon className="animate-spin" />
+          ) : (
+            "Verify Transaction"
+          )}
         </Button>
       </div>
     </div>

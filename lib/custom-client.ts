@@ -1,7 +1,7 @@
 import { createPublicClient, http, rpcSchema } from "viem";
 import { sepolia } from "viem/chains";
 
-type DebugParameterPayload = Partial<{
+export type DebugParameterPayload = Partial<{
   tracer: "callTracer" | "prestateTracer";
   tracerConfig: {
     onlyTopCall: boolean;
@@ -9,7 +9,7 @@ type DebugParameterPayload = Partial<{
   timeout: string;
 }>;
 
-type DebugParameterResponse = Array<{
+export type DebugParameterResponse = Array<{
   jsonrpc: string;
   id: number;
   result: {
@@ -24,10 +24,9 @@ type DebugParameterResponse = Array<{
   };
 }>;
 
-type DebugTraceResponse = Array<{
-  jsonrpc: string;
-  id: number;
+export type DebugTraceResponse = Array<{
   txHash: `0x${string}`;
+  success: boolean;
   result: {
     from: `0x${string}`;
     gas: `0x${string}`;
@@ -37,6 +36,16 @@ type DebugTraceResponse = Array<{
     output: `0x${string}`;
     value: `0x${string}`;
     type: string;
+    reciever:
+      | number
+      | bigint
+      | `0x${string}`
+      | readonly `0x${string}`[]
+      | readonly `0x${string}`[]
+      | readonly `0x${string}`[]
+      | readonly `0x${string}`[]
+      | undefined;
+    amount: number;
   };
 }>;
 

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use client";
 
 import { useRef } from "react";
@@ -11,9 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DebugTraceResponse } from "@/lib/custom-client";
+import { toEthAddress } from "@/lib/utils";
+import { useReactToPrint } from "react-to-print";
+import { match } from "ts-pattern";
 
 interface PrintReceiptProps {
-  details: any;
+  details: DebugTraceResponse | undefined;
   resolution: string;
   onClose: () => void;
 }
@@ -24,150 +26,10 @@ export function PrintReceipt({
   onClose,
 }: PrintReceiptProps) {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef: receiptRef });
 
   const handlePrint = () => {
-    const receiptContent = receiptRef.current;
-    if (!receiptContent) return;
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    const html = `
-      <html>
-        <head>
-          <title>Transaction Receipt</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 20px;
-              color: #000;
-            }
-            .receipt {
-              max-width: 400px;
-              margin: 0 auto;
-              border: 1px solid #ccc;
-              padding: 20px;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 20px;
-              border-bottom: 1px solid #eee;
-              padding-bottom: 10px;
-            }
-            .logo {
-              font-weight: bold;
-              font-size: 24px;
-              margin-bottom: 5px;
-            }
-            .detail {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 10px;
-            }
-            .label {
-              font-weight: bold;
-              color: #555;
-            }
-            .value {
-              text-align: right;
-            }
-            .status {
-              margin: 15px 0;
-              padding: 10px;
-              border-radius: 4px;
-              text-align: center;
-            }
-            .successful {
-              background-color: #d4edda;
-              color: #155724;
-            }
-            .failed, .reverted {
-              background-color: #f8d7da;
-              color: #721c24;
-            }
-            .pending {
-              background-color: #fff3cd;
-              color: #856404;
-            }
-            .footer {
-              margin-top: 20px;
-              text-align: center;
-              font-size: 12px;
-              color: #777;
-            }
-            .resolution {
-              margin-top: 20px;
-              padding: 10px;
-              background-color: #e9ecef;
-              border-radius: 4px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="receipt">
-            <div class="header">
-              <div class="logo">LocalPayments</div>
-              <div>Transaction Receipt</div>
-            </div>
-            
-            <div class="detail">
-              <span class="label">Transaction ID:</span>
-              <span class="value">${details.fromWallet.substring(0, 10)}...${details.fromWallet.substring(details.fromWallet.length - 4)}</span>
-            </div>
-            
-            <div class="detail">
-              <span class="label">Date:</span>
-              <span class="value">${details.time}</span>
-            </div>
-            
-            <div class="detail">
-              <span class="label">Product:</span>
-              <span class="value">${details.product}</span>
-            </div>
-            
-            <div class="detail">
-              <span class="label">Amount:</span>
-              <span class="value">${details.amount}</span>
-            </div>
-            
-            <div class="detail">
-              <span class="label">From:</span>
-              <span class="value">${details.fromWallet.substring(0, 6)}...${details.fromWallet.substring(details.fromWallet.length - 4)}</span>
-            </div>
-            
-            <div class="detail">
-              <span class="label">To:</span>
-              <span class="value">${details.toWallet.substring(0, 6)}...${details.toWallet.substring(details.toWallet.length - 4)}</span>
-            </div>
-            
-            <div class="status ${details.status}">
-              ${details.statusMessage}: ${details.statusDescription}
-            </div>
-            
-            <div class="resolution">
-              <div class="label">Resolution:</div>
-              <div>${resolution || "No resolution provided"}</div>
-            </div>
-            
-            <div class="footer">
-              <p>This receipt was generated on ${new Date().toLocaleString()}</p>
-              <p>LocalPayments - Secure Blockchain Transactions</p>
-            </div>
-          </div>
-          <script>
-            window.onload = function() {
-              window.print();
-              window.onfocus = function() { window.close(); }
-            }
-          </script>
-        </body>
-      </html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(html);
-    printWindow.document.close();
+    reactToPrintFn();
   };
 
   return (
@@ -196,55 +58,66 @@ export function PrintReceipt({
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <p className="text-gray-600 text-sm">Transaction ID</p>
-              <p className="font-medium">
-                {details.fromWallet.substring(0, 10)}...
-                {details.fromWallet.substring(details.fromWallet.length - 4)}
-              </p>
+              <p className="font-medium">{toEthAddress(details?.[0].txHash)}</p>
             </div>
 
             <div>
               <p className="text-gray-600 text-sm">Date</p>
-              <p className="font-medium">{details.time}</p>
+              <p className="font-medium">{new Date().toUTCString()}</p>
             </div>
 
             <div>
               <p className="text-gray-600 text-sm">Product</p>
-              <p className="font-medium">{details.product}</p>
+              <p className="font-medium">{"N/A"}</p>
             </div>
 
             <div>
               <p className="text-gray-600 text-sm">Amount</p>
-              <p className="font-medium">{details.amount}</p>
+              <p className="font-medium">{details?.[0].result.amount}</p>
             </div>
 
             <div>
               <p className="text-gray-600 text-sm">From</p>
-              <p className="font-medium">
-                {details.fromWallet.substring(0, 6)}...
-                {details.fromWallet.substring(details.fromWallet.length - 4)}
-              </p>
+              <p className="font-medium">{details?.[0].result.from}</p>
             </div>
 
             <div>
               <p className="text-gray-600 text-sm">To</p>
-              <p className="font-medium">
-                {details.toWallet.substring(0, 6)}...
-                {details.toWallet.substring(details.toWallet.length - 4)}
-              </p>
+              <p className="font-medium">{details?.[0].result.to}</p>
             </div>
           </div>
 
           <div
             className={`p-3 rounded-md mb-6 ${
-              details.status === "successful"
+              details?.[0].success === true
                 ? "bg-green-100 text-green-800"
-                : details.status === "failed" || details.status === "reverted"
+                : details?.[0].success === false
                   ? "bg-red-100 text-red-800"
                   : "bg-yellow-100 text-yellow-800"
             }`}
           >
-            <p className="font-medium">{details.statusMessage}</p>
-            <p className="text-sm">{details.statusDescription}</p>
+            <p className="font-medium">
+              {match(details?.[0].success)
+                .with(true, () => "Successful Transaction")
+                .with(false, () => "Failed Transaction")
+                .with(undefined, () => null)
+                .exhaustive()}
+            </p>
+            <p className="text-sm">
+              {match(details?.[0].success)
+                .with(
+                  true,
+                  () =>
+                    "This transaction was completed successfully and the payment has been received.",
+                )
+                .with(
+                  false,
+                  () =>
+                    "This transaction failed to complete. Reason: Insufficient funds",
+                )
+                .with(undefined, () => null)
+                .exhaustive()}
+            </p>
           </div>
 
           <div className="bg-gray-100 p-3 rounded-md mb-6">

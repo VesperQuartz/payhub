@@ -31,7 +31,10 @@ export const OverView = () => {
           title="Pending Payments"
           value={`${pendingTransaction ?? 0}`}
         />
-        <StatCard title="Total Sales" value={`$${totalSales ?? 0} PYUSD`} />
+        <StatCard
+          title="Total Sales"
+          value={`$${totalSales?.toFixed(2) ?? 0} PYUSD`}
+        />
         <StatCard
           title="Completed Transaction"
           value={`${completedTransaction ?? 0}`}

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { WalletMetamask } from "@web3icons/react";
-import { WalletCoinbase } from "@web3icons/react";
 import { Connector, useConnect } from "wagmi";
 import {
   Dialog,
@@ -14,9 +13,6 @@ import { Card, CardContent } from "./ui/card";
 const wallet = [
   {
     icon: <WalletMetamask variant="branded" size="24" />,
-  },
-  {
-    icon: <WalletCoinbase variant="branded" size="24" />,
   },
 ];
 

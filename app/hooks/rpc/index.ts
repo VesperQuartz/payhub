@@ -1,6 +1,6 @@
 import { pyUsdAbi } from "@/app/generated";
 import { client } from "@/lib/custom-client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { decodeFunctionData, hexToBool, toHex } from "viem";
 
 export const useDebugTraceTransaction = (txHash: `0x${string}`) => {
@@ -24,15 +24,14 @@ export const useDebugTraceTransaction = (txHash: `0x${string}`) => {
   });
 };
 
-export const useDebugTraceBlockByNumber = (blockNo: string | number) => {
-  return useQuery({
-    enabled: !!blockNo,
-    queryKey: ["debug_traceBlockByNumber", blockNo],
-    queryFn: async () => {
+export const useDebugTraceBlockByNumber = () => {
+  return useMutation({
+    mutationKey: ["debug_traceBlockByNumber"],
+    mutationFn: async (blockNo: string | number | undefined) => {
       const disputeCheck = await client.request({
         method: "debug_traceBlockByNumber",
         params: [
-          toHex(blockNo),
+          toHex(Number(blockNo!)),
           {
             tracer: "callTracer",
             tracerConfig: {
@@ -55,10 +54,13 @@ export const useDebugTraceBlockByNumber = (blockNo: string | number) => {
               abi: pyUsdAbi,
               data: tx.result.input,
             }).args[0],
-            amount: decodeFunctionData({
-              abi: pyUsdAbi,
-              data: tx.result.input,
-            }).args[1],
+            amount:
+              Number(
+                decodeFunctionData({
+                  abi: pyUsdAbi,
+                  data: tx.result.input,
+                }).args[1],
+              ) / 1e6,
           },
           success: hexToBool(tx.result.output),
         }));

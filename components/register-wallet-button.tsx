@@ -6,7 +6,6 @@ import { Wallet } from "lucide-react";
 export const RegisterWalletButton = () => {
   const { address } = useAccount();
   const { connectors, connect } = useConnect();
-  console.log(connectors);
 
   return (
     <div className="mt-2">

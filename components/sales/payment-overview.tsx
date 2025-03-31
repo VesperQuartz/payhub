@@ -30,7 +30,9 @@ export function PaymentOverview({
 
         <div className="border border-neutral-800 rounded-lg p-4 bg-neutral-900">
           <p className="text-neutral-400 text-sm mb-1">Success Rate</p>
-          <p className="text-3xl font-bold">{successRate}%</p>
+          <p className="text-3xl font-bold">
+            {Number.isNaN(successRate) ? 0 : successRate}%
+          </p>
         </div>
       </div>
     </div>

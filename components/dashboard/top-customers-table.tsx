@@ -34,7 +34,7 @@ const TopCustomersTable = ({
                 {/* </div> */}
                 <span>{toEthAddress(customer.customerAddress)}</span>
               </TableCell>
-              <TableCell>${customer.price} spent</TableCell>
+              <TableCell>${customer.price.toFixed(2)} spent</TableCell>
               <TableCell>{customer.totalCount} Transactions</TableCell>
             </TableRow>
           ))}

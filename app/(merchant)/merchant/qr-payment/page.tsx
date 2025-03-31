@@ -16,7 +16,7 @@ import {
   useGetProductByMerchantAddress,
   useRegister,
 } from "@/app/hooks/api";
-import { useAccount } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { QRCode } from "@/components/ui/qr-code";
 import { useWatchPyUsdTransferEvent } from "@/app/generated";
 import { toEthAddress } from "@/lib/utils";
@@ -24,6 +24,7 @@ import { formatUnits } from "viem";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useReactToPrint } from "react-to-print";
+import { sepolia } from "viem/chains";
 
 enum MonitoringState {
   NOT_STARTED = "not_started",
@@ -40,6 +41,7 @@ export default function QRPaymentPage() {
     "product",
   );
   const [selectedProduct, setSelectedProduct] = useState<string>();
+  const [txhash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const [productName, setProductName] = useState<string>();
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [monitoringState, setMonitoringState] = useState<MonitoringState>(
@@ -57,6 +59,12 @@ export default function QRPaymentPage() {
       setProductName(product.productName);
     }
   };
+  const txRecipt = useWaitForTransactionReceipt({
+    chainId: sepolia.id,
+    hash: txhash,
+  });
+
+  console.log(txRecipt.data, "Transaction Receipt");
 
   useWatchPyUsdTransferEvent({
     onLogs: (logs) => {
@@ -64,6 +72,7 @@ export default function QRPaymentPage() {
       setMonitoringState(MonitoringState.CONFIRMED);
       setTransactionHash(toEthAddress(logs[0].transactionHash));
       if (logs[0]) {
+        setTxHash(logs[0].transactionHash);
         const {
           args: { to, from, value },
           transactionHash,
@@ -82,7 +91,10 @@ export default function QRPaymentPage() {
                   customerAddress: from!,
                   price: Number(formatUnits(value!, 6)),
                   productName: productName!,
-                  status: "completed",
+                  status:
+                    txRecipt.data?.status == "success"
+                      ? "completed"
+                      : "disputed",
                   txHash: transactionHash,
                 },
                 {

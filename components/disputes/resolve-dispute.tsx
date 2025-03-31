@@ -1,29 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { PrintReceipt } from "@/components/disputes/print-receipt";
-import { Printer } from "lucide-react";
+import { Loader2Icon, Printer } from "lucide-react";
+import { DebugTraceResponse } from "@/lib/custom-client";
+import { Input } from "../ui/input";
 
 interface ResolveDisputeProps {
-  details: any;
-  onResolve: (resolution: string) => void;
+  details: DebugTraceResponse | undefined;
+  onResolve: (resolution: string, issue: string) => void;
   onCancel: () => void;
+  isLoading: boolean;
 }
 
 export function ResolveDispute({
   details,
   onResolve,
   onCancel,
+  isLoading,
 }: ResolveDisputeProps) {
   const [resolution, setResolution] = useState("");
+  const [issue, setIssue] = useState("");
   const [showPrintReceipt, setShowPrintReceipt] = useState(false);
 
   const handleResolve = () => {
-    if (resolution.trim()) {
-      onResolve(resolution);
+    if (resolution.trim() && issue.trim()) {
+      onResolve(resolution, issue);
     }
   };
 
@@ -38,6 +42,16 @@ export function ResolveDispute({
         Based on the transaction details, take appropriate action to resolve the
         customer&apos;s issue
       </p>
+
+      <div className="mb-4">
+        <h4 className="text-sm text-gray-400 mb-2">Issue</h4>
+        <Input
+          value={issue}
+          onChange={(e) => setIssue(e.target.value)}
+          placeholder="What was the issue"
+          className="bg-gray-800 border-gray-700 text-white"
+        />
+      </div>
 
       <div className="mb-4">
         <h4 className="text-sm text-gray-400 mb-2">Resolution Action</h4>
@@ -64,10 +78,14 @@ export function ResolveDispute({
           </Button>
           <Button
             onClick={handleResolve}
-            disabled={!resolution.trim()}
+            disabled={!resolution.trim() || !issue.trim()}
             className="bg-orange-500 hover:bg-orange-600 text-white"
           >
-            Resolve Dispute
+            {isLoading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              "Resolve Dispute"
+            )}
           </Button>
         </div>
 

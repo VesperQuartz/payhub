@@ -18,6 +18,7 @@ export class UserRepository implements UserRepositoryImpl {
           businessName: payload.businessName,
           role: payload.role,
           email: payload.email,
+          verifiedSignature: payload.verifiedSignature,
         })
         .returning(),
     );

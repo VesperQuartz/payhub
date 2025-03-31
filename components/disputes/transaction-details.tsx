@@ -1,70 +1,40 @@
 "use client";
 
-import { AlertCircle, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { DebugTraceResponse } from "@/lib/custom-client";
+import { AlertCircle, CheckCircle } from "lucide-react";
+import { match } from "ts-pattern";
 
-interface TransactionDetailsProps {
-  details: {
-    status: string;
-    statusMessage: string;
-    statusDescription: string;
-    amount: string;
-    fromWallet: string;
-    toWallet: string;
-    time: string;
-    product: string;
-    warning?: string;
-    warningMessage?: string;
-    warningDescription?: string;
-    confirmations?: number;
-  };
-}
-
-export function TransactionDetails({ details }: TransactionDetailsProps) {
+export function TransactionDetails({
+  details,
+}: {
+  details: DebugTraceResponse | undefined;
+}) {
   const getStatusBadge = () => {
-    switch (details.status) {
-      case "successful":
+    switch (details?.[0].success) {
+      case true:
         return (
           <span className="px-2 py-1 bg-green-900 text-green-500 text-xs rounded">
             Successful
           </span>
         );
-      case "failed":
+      case false:
         return (
           <span className="px-2 py-1 bg-red-900 text-red-400 text-xs rounded">
             Failed
           </span>
         );
-      case "reverted":
-        return (
-          <span className="px-2 py-1 bg-red-900 text-red-400 text-xs rounded">
-            Reverted
-          </span>
-        );
-      case "pending":
-        return (
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-1 bg-orange-900 text-orange-400 text-xs rounded">
-              Pending
-            </span>
-            <span className="text-gray-400 text-xs">
-              ({details.confirmations} confirmations)
-            </span>
-          </div>
-        );
+
       default:
         return null;
     }
   };
 
   const getStatusIcon = () => {
-    switch (details.status) {
-      case "successful":
+    switch (details?.[0].success) {
+      case true:
         return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case "failed":
-      case "reverted":
+      case false:
         return <AlertCircle className="w-5 h-5 text-red-400" />;
-      case "pending":
-        return <Clock className="w-5 h-5 text-orange-400" />;
       default:
         return null;
     }
@@ -85,59 +55,57 @@ export function TransactionDetails({ details }: TransactionDetailsProps) {
 
         <div className="bg-black border border-gray-800 rounded-lg p-4">
           <h4 className="text-sm text-gray-400 mb-2">Amount Sent</h4>
-          <p className="text-white font-medium">{details.amount}</p>
+          <p className="text-white font-medium">{details?.[0].result.amount}</p>
         </div>
 
         <div className="bg-black border border-gray-800 rounded-lg p-4">
           <h4 className="text-sm text-gray-400 mb-2">From Wallet</h4>
           <p className="text-white font-medium text-sm truncate">
-            {details.fromWallet}
+            {details?.[0].result.from}
           </p>
         </div>
 
         <div className="bg-black border border-gray-800 rounded-lg p-4">
           <h4 className="text-sm text-gray-400 mb-2">To Wallet</h4>
           <p className="text-white font-medium text-sm truncate">
-            {details.toWallet}
+            {details?.[0].result.reciever}
           </p>
-        </div>
-
-        <div className="bg-black border border-gray-800 rounded-lg p-4">
-          <h4 className="text-sm text-gray-400 mb-2">Transaction Time</h4>
-          <p className="text-white font-medium">{details.time}</p>
-        </div>
-
-        <div className="bg-black border border-gray-800 rounded-lg p-4">
-          <h4 className="text-sm text-gray-400 mb-2">Product</h4>
-          <p className="text-white font-medium">{details.product}</p>
         </div>
       </div>
 
       <div
         className={`mt-4 p-4 rounded-lg flex items-start gap-3 ${
-          details.status === "successful"
+          details?.[0].success
             ? "bg-green-900/20 text-green-500"
-            : details.status === "failed" || details.status === "reverted"
-              ? "bg-red-900/20 text-red-400"
-              : "bg-orange-900/20 text-orange-400"
+            : "bg-red-900/20 text-red-400"
         }`}
       >
         {getStatusIcon()}
         <div>
-          <h4 className="font-medium">{details.statusMessage}</h4>
-          <p className="text-gray-400">{details.statusDescription}</p>
+          <h4 className="font-medium">
+            {match(details?.[0].success)
+              .with(true, () => "Successful Transaction")
+              .with(false, () => "Failed Transaction")
+              .with(undefined, () => null)
+              .exhaustive()}
+          </h4>
+          <p className="text-gray-400">
+            {match(details?.[0].success)
+              .with(
+                true,
+                () =>
+                  "This transaction was completed successfully and the payment has been received.",
+              )
+              .with(
+                false,
+                () =>
+                  "This transaction failed to complete. Reason: Insufficient funds",
+              )
+              .with(undefined, () => null)
+              .exhaustive()}
+          </p>
         </div>
       </div>
-
-      {details.warning === "duplicate" && (
-        <div className="mt-4 p-4 bg-orange-900/20 rounded-lg flex items-start gap-3 text-orange-400">
-          <AlertTriangle className="w-5 h-5" />
-          <div>
-            <h4 className="font-medium">{details.warningMessage}</h4>
-            <p className="text-gray-400">{details.warningDescription}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

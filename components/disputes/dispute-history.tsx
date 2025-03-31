@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import {
   type ColumnDef,
@@ -10,7 +9,6 @@ import {
   type SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
-import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -21,68 +19,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Sample data for the dispute history
-const disputeData = [
-  {
-    id: "DSP-001",
-    transaction: "0x3a2d ... 9d8e",
-    customer: "0x1a2b ... 9a8b",
-    issue: "Double charged",
-    resolution: "Refund issued",
-    amount: "$3.50",
-    dateResolved: "3/17/2024",
-  },
-  {
-    id: "DSP-002",
-    transaction: "0x5e4d ... 2e1d",
-    customer: "0x7b9c ... 7s8t",
-    issue: "Payment not received",
-    resolution: "Transaction found in pending state",
-    amount: "$4.50",
-    dateResolved: "3/19/2024",
-  },
-  {
-    id: "DSP-003",
-    transaction: "0x5e4d ... 2e1d",
-    customer: "0x7b9c ... 7s8t",
-    issue: "Transaction reverted: Contract execution reverted",
-    resolution: "ahahha",
-    amount: "$4.50",
-    dateResolved: "3/29/2025",
-  },
-  {
-    id: "DSP-004",
-    transaction: "0x3a2d ... 9d8e",
-    customer: "0x1a2b ... 9a8b",
-    issue: "Duplicate payment",
-    resolution: "Confirmed payment received",
-    amount: "$3.50",
-    dateResolved: "3/29/2025",
-  },
-  {
-    id: "DSP-005",
-    transaction: "0x3a2d ... 9d8e",
-    customer: "0x1a2b ... 9a8b",
-    issue: "Duplicate payment",
-    resolution: "Confirmed payment received",
-    amount: "$3.50",
-    dateResolved: "3/29/2025",
-  },
-];
+import { SelectDispute } from "@/app/database/schema";
+import { toEthAddress } from "@/lib/utils";
+import { useGetDisputeByMerchantAddress } from "@/app/hooks/api";
+import { useAccount } from "wagmi";
 
-// Define columns for the dispute history table
-const columns: ColumnDef<(typeof disputeData)[0]>[] = [
+const columns: ColumnDef<SelectDispute>[] = [
   {
     accessorKey: "id",
     header: "ID",
   },
   {
-    accessorKey: "transaction",
+    accessorKey: "merchantAddress",
     header: "Transaction",
+    cell: ({ row }) => {
+      const { merchantAddress } = row.original;
+      return <>{toEthAddress(merchantAddress)}</>;
+    },
   },
   {
-    accessorKey: "customer",
+    accessorKey: "customerAddress",
     header: "Customer",
+    cell: ({ row }) => {
+      const { customerAddress } = row.original;
+      return <>{toEthAddress(customerAddress)}</>;
+    },
   },
   {
     accessorKey: "issue",
@@ -93,33 +54,21 @@ const columns: ColumnDef<(typeof disputeData)[0]>[] = [
     header: "Resolution",
   },
   {
-    accessorKey: "amount",
+    accessorKey: "price",
     header: "Amount",
   },
   {
-    accessorKey: "dateResolved",
+    accessorKey: "createdAt",
     header: "Date Resolved",
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: () => (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="text-orange-400 hover:text-orange-300"
-      >
-        <ExternalLink className="w-4 h-4" />
-      </Button>
-    ),
   },
 ];
 
 export function DisputeHistory() {
   const [sorting, setSorting] = useState<SortingState>([]);
-
+  const { address } = useAccount();
+  const dispute = useGetDisputeByMerchantAddress(address);
   const table = useReactTable({
-    data: disputeData,
+    data: dispute?.data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -129,6 +78,10 @@ export function DisputeHistory() {
       sorting,
     },
   });
+
+  if (dispute.isLoading) {
+    return null;
+  }
 
   return (
     <section>
