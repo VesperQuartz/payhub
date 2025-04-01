@@ -4,16 +4,16 @@ A decentralized payment processing platform that enables secure, transparent, an
 
 ## Introduction
 
-PayHub is a modern payment processing solution that leverages blockchain technology to provide a secure, transparent, and efficient payment system. Built on the Sepolia testnet, it uses PYUSD (a stablecoin) for transactions, ensuring price stability and reducing volatility risks.
+PayHub is a modern payment processing solution that leverages blockchain technology to provide a secure, transparent, and efficient payment system. Built using Google's blockchain RPC on the Sepolia testnet, it uses PYUSD (a stablecoin) for transactions, ensuring price stability and reducing volatility risks.
 
 ### Key Features
 
-- **Secure Payments**: Smart contract-based transactions with built-in verification
+- **Secure Payments**: Smart contract based transactions with builtin verification
 - **Merchant Dashboard**: Comprehensive tools for managing inventory, sales, and disputes
 - **Customer Store**: User-friendly interface for browsing products and making purchases
 - **Dispute Resolution**: Built-in system for handling transaction disputes
 - **Transaction Tracking**: Real-time monitoring of payment status and history
-- **Receipt Generation**: Automated receipt creation for all transactions
+- **Receipt Generation**: Receipt creation for all transactions
 
 ## Features in Detail
 
@@ -24,22 +24,15 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 - **Product Management**
 
   - Add, edit, and delete products
-  - Set product prices in PYUSD
+  - Set product prices
   - Manage product stock levels
   - Categorize products for better organization
-  - Upload product images and descriptions
-
-- **Stock Control**
-  - Real-time stock level monitoring
-  - Low stock alerts
-  - Stock history tracking
-  - Bulk stock updates
 
 #### Sales Analytics
 
 - **Transaction Overview**
 
-  - Daily, weekly, and monthly sales reports
+  - Daily sales reports
   - Revenue tracking in PYUSD
   - Transaction volume analysis
   - Customer purchase patterns
@@ -57,13 +50,12 @@ PayHub is a modern payment processing solution that leverages blockchain technol
   - View and respond to customer disputes
   - Upload evidence and documentation
   - Track dispute status and history
-  - Automated dispute notifications
 
 - **Transaction Verification**
   - Real-time transaction monitoring
   - Transaction status tracking
   - Payment confirmation system
-  - Automated receipt generation
+  - Receipt generation
 
 ### 2. Customer Store
 
@@ -76,17 +68,11 @@ PayHub is a modern payment processing solution that leverages blockchain technol
   - Product filtering and sorting
   - Detailed product information
 
-- **Shopping Cart**
-  - Real-time price calculation
-  - Stock availability checking
-  - Cart persistence
-  - Quantity adjustment
-
 #### Payment Processing
 
 - **Wallet Integration**
 
-  - MetaMask and Coinbase Wallet support
+  - MetaMask Wallet support
   - PYUSD balance checking
   - Gas fee estimation
   - Transaction confirmation
@@ -104,99 +90,49 @@ PayHub is a modern payment processing solution that leverages blockchain technol
   - Mobile wallet compatibility
   - Secure payment verification
   - Transaction amount validation
-  - Expiration time management
   - Automatic status updates
 
-### 3. Dispute Resolution System
-
-#### Customer Dispute Process
-
-- **Dispute Filing**
-
-  - Transaction selection
-  - Issue categorization
-  - Evidence upload capability
-  - Detailed description submission
-  - Supporting documentation attachment
-
-- **Dispute Tracking**
-  - Real-time status updates
-  - Communication history
-  - Evidence review status
-  - Resolution timeline
-  - Automated notifications
-
-#### Merchant Response System
-
-- **Dispute Management**
-
-  - Dispute queue management
-  - Priority-based handling
-  - Response time tracking
-  - Evidence submission
-  - Resolution options
-
-- **Resolution Process**
-  - Multiple resolution paths
-  - Partial refund options
-  - Full refund capability
-  - Dispute rejection with evidence
-  - Automated status updates
-
-#### Dispute Resolution Features
-
-- **Evidence Management**
-
-  - Secure file upload
-  - Multiple file type support
-  - Evidence categorization
-  - Timestamp verification
-  - Chain of custody tracking
-
-- **Communication System**
-
-  - In-platform messaging
-  - Automated notifications
-  - Status update alerts
-  - Resolution confirmation
-  - Feedback collection
-
-- **Resolution Tracking**
-  - Dispute lifecycle monitoring
-  - Resolution time tracking
-  - Success rate analytics
-  - Pattern identification
-  - Performance metrics
-
-### 4. Technical Implementation
+### 3. Technical Implementation
 
 #### Blockchain Integration
 
-1. **Wallet Connection**
+1. **Google Blockchain RPC Integration**
+
+   - Leveraging Google Cloud's enterprise-grade blockchain infrastructure
+   - Benefits include:
+     - Enterprise-grade reliability through Google Cloud infrastructure
+     - Cost-effective with generous free tier (up to 100 requests/second)
+     - Seamless scalability for growing request volumes
+     - Full compatibility with existing RPC providers
+   - Using managed Ethereum nodes for secure blockchain access
+   - Leveraging Google's peer-to-peer network for real-time blockchain data synchronization
+
+2. **Wallet Connection**
 
    - We use wagmi's `useConnect` hook for wallet integration
-   - Currently supporting MetaMask and Coinbase Wallet through wagmi connectors
+   - Currently supporting MetaMask Wallet through wagmi connectors
    - Wallet state is managed through wagmi's built-in hooks
    - We store wallet addresses in our database for user identification
 
-2. **PYUSD Integration**
+3. **PYUSD Integration**
 
    - We interact with the PYUSD token contract on Sepolia testnet
    - Using wagmi's hooks for contract interactions
-   - Contract address: `0xCaC524BcA292aaade2DF8A05cC58F0a65B1B3bB9`
+   - Contract address: `0xCaC524BcA292aaade2DF8A05cC58F0a65B1B3bB9` [Test-Net]
    - We check balances and estimate gas fees before transactions
 
-3. **QR Code Payment System**
+4. **QR Code Payment System**
 
-   - We generate QR codes with payment data in the format: `ethereum:${contractAddress}@11155111/transfer?address=${address}&uint256=${amount}`
-   - Using `useWatchPyUsdTransferEvent` to monitor payment events in real-time
+   - We generate dynamic QR codes with payment data
+   - Using `useWatchPyUsdTransferEvent` to monitor payment events in real-time which internally uses `eth_getLogs` to monitor transaction Logs
    - We verify transactions using `useWaitForTransactionReceipt`
    - The system includes a print functionality for QR codes
    - We track payment status and update the UI accordingly
 
-4. **Dispute Resolution System**
+5. **Dispute Resolution System**
 
-   - We use `useDebugTraceBlockByNumber` to verify transaction details
+   - We use `useDebugTraceBlockByNumber` to verify transaction details and also becaue block number is better than using transaction hash
+     because of the length of the transaction hash.
    - The system allows merchants to:
      - Enter transaction block numbers
      - View transaction details (amount, sender, receiver)
@@ -209,7 +145,7 @@ PayHub is a modern payment processing solution that leverages blockchain technol
      - Resolution details
      - Timestamps
 
-5. **Database Structure**
+6. **Database Structure**
 
    - Using Turso (SQLite) with Drizzle ORM
    - Main tables include:
@@ -218,9 +154,8 @@ PayHub is a modern payment processing solution that leverages blockchain technol
      - Transactions (payment records)
      - Disputes (resolution tracking)
 
-6. **Security Features**
+7. **Security Features**
    - All transactions are verified through the blockchain
-   - We never store private keys
    - Wallet connections are handled securely through wagmi
    - Transaction verification is done on-chain
 
@@ -247,7 +182,11 @@ PayHub addresses these issues by:
 - **Frontend**: Next.js 15, TypeScript, Tailwind CSS
 - **UI Components**: shadcn/ui, Radix UI
 - **Blockchain**:
-  - Sepolia testnet
+  - Sepolia testnet with Google's Blockchain RPC
+    - Enterprise-grade managed nodes
+    - High-performance infrastructure
+    - Scalable request handling
+    - Secure blockchain access
   - wagmi/viem for blockchain interactions
   - PYUSD token integration
 - **State Management**: Zustand
