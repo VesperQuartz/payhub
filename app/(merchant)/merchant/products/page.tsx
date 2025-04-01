@@ -445,7 +445,7 @@ const ProductsPage = () => {
                           <SelectItem
                             key={category.id}
                             value={category.name}
-                            className="hover:bg-neutral-800 focus:bg-neutral-800"
+                            className="text-white hover:bg-neutral-800 hover:text-white"
                           >
                             {category.name}
                           </SelectItem>
