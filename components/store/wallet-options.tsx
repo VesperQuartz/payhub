@@ -30,7 +30,7 @@ export function WalletOptions() {
         </DialogHeader>
         {connectors.map((connector, index) => (
           <WalletOption
-            icon={wallet[index].icon}
+            icon={wallet[index]?.icon}
             key={connector.uid}
             connector={connector}
             onClick={() => connect({ connector })}
