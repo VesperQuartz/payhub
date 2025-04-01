@@ -59,7 +59,7 @@ const WalletOption = ({
   }, [connector]);
 
   return (
-    <Card className="flex border-4 border-black h-10 justify-center">
+    <Card className="flex border-4 border-black h-10 justify-center text-white">
       <CardContent className="flex justify-between">
         <div className="flex gap-2">
           {icon}

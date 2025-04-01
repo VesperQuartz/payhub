@@ -91,7 +91,7 @@ const DisputeResolutionPage = () => {
         </h1>
       </div>
 
-      <div className="max-w-5xl">
+      <div className="">
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-2">Transaction Verification</h2>
           <p className="text-gray-400 mb-4">

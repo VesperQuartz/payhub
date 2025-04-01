@@ -1,6 +1,5 @@
 import * as React from "react";
 import { WalletMetamask } from "@web3icons/react";
-import { WalletCoinbase } from "@web3icons/react";
 import { Connector, useConnect } from "wagmi";
 import {
   Dialog,
@@ -17,9 +16,6 @@ export function WalletOptions() {
   const wallet = [
     {
       icon: <WalletMetamask variant="branded" size="24" />,
-    },
-    {
-      icon: <WalletCoinbase variant="branded" size="24" />,
     },
   ];
 
@@ -65,7 +61,7 @@ const WalletOption = ({
 
   return (
     <Card className="flex border-4 border-black h-10 justify-center">
-      <CardContent className="flex justify-between">
+      <CardContent className="flex justify-between text-white">
         <div className="flex gap-2">
           {icon}
           <span>{connector.name}</span>
