@@ -16,7 +16,7 @@ import { useAddDispute } from "@/app/hooks/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 
-export const DisputeResolutionPage = () => {
+const DisputeResolutionPage = () => {
   const { address } = useAccount();
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -149,4 +149,5 @@ export const DisputeResolutionPage = () => {
     </>
   );
 };
+
 export default DisputeResolutionPage;

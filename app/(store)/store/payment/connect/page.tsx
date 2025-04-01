@@ -8,7 +8,7 @@ import { usePaymentInfoStore } from "@/app/store";
 import { useEstimateFeesPerGas } from "wagmi";
 import { sepolia } from "viem/chains";
 
-export const PaymentConnectPage = () => {
+const PaymentConnectPage = () => {
   const router = useRouter();
   const paymentInfo = usePaymentInfoStore();
   const analyze = useEstimateFeesPerGas({

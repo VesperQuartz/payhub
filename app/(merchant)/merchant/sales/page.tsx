@@ -8,7 +8,7 @@ import { SelectTransaction } from "@/app/database/schema";
 import { useGetTransactionByMerchantAddress } from "@/app/hooks/api";
 import { useAccount } from "wagmi";
 
-export default function SalesPage() {
+const SalesPage = () => {
   const [receiptTransaction, setReceiptTransaction] =
     useState<SelectTransaction | null>(null);
   const [receiptDialogOpen, setReceiptDialogOpen] = useState(false);
@@ -59,4 +59,6 @@ export default function SalesPage() {
       />
     </div>
   );
-}
+};
+
+export default SalesPage;

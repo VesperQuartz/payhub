@@ -12,7 +12,7 @@ import { useWritePyUsdTransfer } from "@/app/generated";
 import { useAddTransaction } from "@/app/hooks/api";
 import { toast } from "sonner";
 
-export default function PaymentConfirmPage() {
+const PaymentConfirmPage = () => {
   const router = useRouter();
   const paymentInfo = usePaymentInfoStore();
   const { address } = useAccount();
@@ -143,4 +143,5 @@ export default function PaymentConfirmPage() {
       </div>
     </div>
   );
-}
+};
+export default PaymentConfirmPage;

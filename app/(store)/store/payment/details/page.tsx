@@ -12,7 +12,7 @@ import { formatEther } from "viem";
 import React from "react";
 import { toNetWorkFee } from "@/lib/utils";
 
-export default function PaymentDetailsPage() {
+const PaymentDetailsPage = () => {
   const router = useRouter();
   const paymentInfo = usePaymentInfoStore();
   const [sufficientBalance, setSufficientBalance] = React.useState(false);
@@ -186,4 +186,5 @@ export default function PaymentDetailsPage() {
       </div>
     </div>
   );
-}
+};
+export default PaymentDetailsPage;

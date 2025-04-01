@@ -11,7 +11,7 @@ import { toEthAddress, toNetWorkFee } from "@/lib/utils";
 import { match } from "ts-pattern";
 import React from "react";
 
-export const PaymentSuccessPage = () => {
+const PaymentSuccessPage = () => {
   const paymentInfo = usePaymentInfoStore();
   const router = useRouter();
   const handleReturnHome = () => {

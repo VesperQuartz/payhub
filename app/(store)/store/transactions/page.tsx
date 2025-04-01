@@ -17,7 +17,7 @@ import { useGetTransactionByCustomerAddress } from "@/app/hooks/api";
 import { useAccount } from "wagmi";
 import { SelectTransaction } from "@/app/database/schema";
 
-export default function TransactionsPage() {
+const TransactionsPage = () => {
   const [globalFilter, setGlobalFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<TransactionStatus | "all">(
     "all",
@@ -98,4 +98,5 @@ export default function TransactionsPage() {
       </div>
     </div>
   );
-}
+};
+export default TransactionsPage;

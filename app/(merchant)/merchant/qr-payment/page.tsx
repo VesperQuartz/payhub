@@ -32,7 +32,7 @@ enum MonitoringState {
   CONFIRMED = "confirmed",
 }
 
-export default function QRPaymentPage() {
+const QRPaymentPage = () => {
   const { address } = useAccount();
   const transaction = useAddTransaction();
   const register = useRegister();
@@ -410,4 +410,5 @@ export default function QRPaymentPage() {
       </div>
     </div>
   );
-}
+};
+export default QRPaymentPage;

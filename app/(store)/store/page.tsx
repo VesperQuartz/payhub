@@ -15,7 +15,7 @@ type BusinessCategory =
   | "Services"
   | "Entertainment";
 
-export default function StorePage() {
+const StorePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<BusinessCategory>("All");
   const businesses = useGetStoreProduct();
@@ -89,4 +89,5 @@ export default function StorePage() {
       </div>
     </div>
   );
-}
+};
+export default StorePage;
