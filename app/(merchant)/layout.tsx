@@ -10,7 +10,6 @@ import {
   LogOut,
   Menu,
   Package,
-  Settings,
   Shield,
   ShieldAlert,
 } from "lucide-react";
@@ -149,19 +148,6 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
             </nav>
 
             <div className="px-2 space-y-1 mt-auto">
-              <Link
-                href="settings"
-                className={`${
-                  isActive("/merchant/settings")
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                } flex items-center px-2 py-2 text-sm font-medium rounded-md text-neutral-300 hover:bg-neutral-800 hover:text-white`}
-              >
-                <Settings
-                  className={`h-5 w-5 ${!sidebarOpen ? "mx-auto" : "mr-3"}`}
-                />
-                {sidebarOpen && <span>Settings</span>}
-              </Link>
               <Button
                 variant="link"
                 className="flex w-full justify-start px-2 py-2 text-sm font-medium rounded-md text-red-500 hover:bg-neutral-800"
