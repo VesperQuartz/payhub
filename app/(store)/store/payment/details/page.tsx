@@ -28,6 +28,7 @@ const PaymentDetailsPage = () => {
     chainId: sepolia.id,
   });
   const balance = useReadPyUsdBalanceOf({
+    chainId: sepolia.id,
     args: [address!],
   });
 
@@ -44,8 +45,18 @@ const PaymentDetailsPage = () => {
       Number(formatEther(walletBalance.data?.value ?? BigInt(0)) ?? 0)
     ) {
       setGasFeesVerified(true);
+    } else {
+      setGasFeesVerified(false);
+      setSufficientBalance(false);
     }
-  }, [analyze?.data, balance?.data, walletBalance?.data, paymentInfo?.product]);
+  }, [
+    analyze?.data,
+    balance?.data,
+    walletBalance?.data,
+    paymentInfo?.product?.productPrice,
+    paymentInfo?.product,
+    address,
+  ]);
 
   if (
     analyze.isLoading ||
@@ -89,16 +100,6 @@ const PaymentDetailsPage = () => {
           <div className="bg-gray-100 rounded-lg p-4 mb-6">
             <h2 className="font-semibold mb-2">Total Amount</h2>
             <p className="text-xl font-bold">${totalAmount} PYUSD</p>
-          </div>
-
-          <div className="bg-gray-100 rounded-lg p-4 mb-6">
-            <h2 className="font-semibold mb-2">
-              Transaction Simulation Successful
-            </h2>
-            <p className="text-gray-700 mb-2">
-              Transaction simulation successful. You can proceed with the
-              payment.
-            </p>
           </div>
 
           <div className="bg-gray-100 rounded-lg p-4 mb-6">

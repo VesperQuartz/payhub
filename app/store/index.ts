@@ -54,7 +54,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
       resetProfile: () => set({ profile: null, hasSetupProfile: false }),
     }),
     {
-      name: "payhub-profile",
+      name: "payhub-profile-storage",
     },
   ),
 );

@@ -12,7 +12,7 @@ export const NavBar = () => {
     <header className="border-b border-neutral-800 px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href="/" passHref legacyBehavior>
+          <Link href="/store" passHref legacyBehavior>
             <a className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#FF6B00]">
                 <CircleDollarSign className="h-5 w-5 text-white" />

@@ -146,7 +146,7 @@ const BusinessPage = () => {
               <div className="flex items-center">
                 <Star size={18} className="text-emerald-400 mr-2" />
                 <span className="flex items-center">
-                  {String(groupRatings) ?? 0}
+                  {String(isNaN(groupRatings) ? 0 : groupRatings) ?? 0}
                 </span>
               </div>
             </div>

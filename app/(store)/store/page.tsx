@@ -19,7 +19,6 @@ const StorePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<BusinessCategory>("All");
   const businesses = useGetStoreProduct();
-  console.log(businesses?.data, "PDATA");
 
   const filteredBusinesses = businesses.data?.filter((business) => {
     const matchesSearch =
@@ -80,7 +79,6 @@ const StorePage = () => {
           ))}
         </div>
 
-        {/* Business Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBusinesses?.map((business) => (
             <BusinessCard key={business.merchantAddress} business={business} />

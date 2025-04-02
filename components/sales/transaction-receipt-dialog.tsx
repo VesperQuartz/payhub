@@ -10,8 +10,9 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useRef } from "react";
 import { SelectTransaction } from "@/app/database/schema";
+import { useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 
 interface TransactionReceiptDialogProps {
   transaction: SelectTransaction | null;
@@ -25,63 +26,10 @@ export function TransactionReceiptDialog({
   onOpenChange,
 }: TransactionReceiptDialogProps) {
   const receiptRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef: receiptRef });
 
   const handlePrintReceipt = () => {
-    if (!transaction || !receiptRef.current) return;
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    const receiptContent = receiptRef.current.innerHTML;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>PAYHUB - Transaction Receipt</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              padding: 20px;
-              max-width: 800px;
-              margin: 0 auto;
-            }
-            .receipt {
-              border: 1px solid #eee;
-              padding: 20px;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 20px;
-            }
-            .detail {
-              display: flex;
-              justify-content: space-between;
-              border-bottom: 1px solid #eee;
-              padding: 8px 0;
-            }
-            .footer {
-              text-align: center;
-              margin-top: 20px;
-              font-size: 14px;
-            }
-            .completed { color: #10b981; }
-            .pending { color: #f59e0b; }
-            .failed { color: #ef4444; }
-          </style>
-        </head>
-        <body>
-          <div class="receipt">
-            ${receiptContent}
-          </div>
-        </body>
-      </html>
-    `);
-
-    // Trigger print and close the window after printing
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.onafterprint = () => printWindow.close();
+    reactToPrintFn();
   };
 
   return (
@@ -98,59 +46,62 @@ export function TransactionReceiptDialog({
 
         {transaction && (
           <div ref={receiptRef} className="bg-white text-black p-6 rounded-md">
-            <div className="header">
-              <h3 className="text-xl font-bold">PAYHUB</h3>
-              <p className="text-sm">Transaction Receipt</p>
+            <div className="text-center border-b border-gray-200 pb-4 mb-6">
+              <h2 className="text-2xl font-bold">PAYHUB</h2>
+              <p className="text-gray-600">Transaction Receipt</p>
             </div>
 
             <div className="space-y-4">
-              <div className="detail">
-                <span className="font-medium">Transaction ID:</span>
-                <span>{transaction.id}</span>
-              </div>
-
-              <div className="detail">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span className="font-medium">Date:</span>
-                <span>{transaction.createdAt}</span>
+                <span>{new Date().toLocaleDateString()}</span>
               </div>
-
-              <div className="detail">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
+                <span className="font-medium">Time:</span>
+                <span>{new Date().toLocaleTimeString()}</span>
+              </div>
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span className="font-medium">Product:</span>
                 <span>{transaction.productName}</span>
               </div>
-
-              <div className="detail">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span className="font-medium">Amount:</span>
                 <span>${transaction.price.toFixed(2)} PYUSD</span>
               </div>
-
-              <div className="detail">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
+                <span className="font-medium">Merchant:</span>
+                <span className="text-xs break-all">
+                  {transaction.merchantAddress}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span className="font-medium">Customer:</span>
-                <span className="font-mono text-sm">
+                <span className="text-xs break-all">
                   {transaction.customerAddress}
                 </span>
               </div>
-
-              <div className="detail">
+              <div className="flex justify-between border-b border-gray-200 pb-2">
                 <span className="font-medium">Status:</span>
                 <span
                   className={
                     transaction.status === "completed"
-                      ? "completed"
-                      : transaction.status === "pending"
-                        ? "pending"
-                        : "failed"
+                      ? "text-green-600"
+                      : "text-red-600"
                   }
                 >
                   {transaction.status.charAt(0).toUpperCase() +
                     transaction.status.slice(1)}
                 </span>
               </div>
+              <div className="flex justify-between border-b border-gray-200 pb-2">
+                <span className="font-medium">Transaction Hash:</span>
+                <span className="text-xs break-all">{transaction.txHash}</span>
+              </div>
             </div>
 
-            <div className="footer">
-              <p>Thank you for using PAYHUB!</p>
-              <p className="text-xs mt-2">
+            <div className="text-center mt-8 pt-4 border-t border-gray-200">
+              <p className="font-medium">Thank you for using PAYHUB!</p>
+              <p className="text-sm text-gray-600 mt-1">
                 This receipt serves as proof of transaction.
               </p>
             </div>
@@ -160,14 +111,13 @@ export function TransactionReceiptDialog({
         <DialogFooter className="flex flex-col sm:flex-row gap-3 mt-4">
           <Button
             variant="outline"
-            className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+            className="printContent border-neutral-800 text-white hover:bg-neutral-900"
             onClick={() => onOpenChange(false)}
           >
             Close
           </Button>
           <Button
-            variant="outline"
-            className="border-neutral-800 text-white bg-[#FF6B00] hover:bg-[#E05E00]"
+            className="printContent bg-[#FF6B00] hover:bg-[#E05E00]"
             onClick={handlePrintReceipt}
           >
             <Printer className="h-4 w-4 mr-2" />
