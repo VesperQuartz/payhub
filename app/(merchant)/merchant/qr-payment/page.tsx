@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Check, Copy, QrCode, RefreshCw } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Check, Copy, QrCode, RefreshCw, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -42,6 +42,7 @@ const QRPaymentPage = () => {
   );
   const [selectedProduct, setSelectedProduct] = useState<string>();
   const [txhash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
+  const [txBlock, setBlock] = useState<bigint | undefined>(undefined);
   const [productName, setProductName] = useState<string>();
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [monitoringState, setMonitoringState] = useState<MonitoringState>(
@@ -67,10 +68,15 @@ const QRPaymentPage = () => {
   console.log(txRecipt.data, "Transaction Receipt");
 
   useWatchPyUsdTransferEvent({
+    chainId: sepolia.id,
+    onError: (error) => {
+      console.log(error);
+    },
     onLogs: (logs) => {
       setMonitoringTime(monitoringTime);
       setMonitoringState(MonitoringState.CONFIRMED);
       setTransactionHash(toEthAddress(logs[0].transactionHash));
+      setBlock(logs[0].blockNumber);
       if (logs[0]) {
         setTxHash(logs[0].transactionHash);
         const {
@@ -150,13 +156,69 @@ const QRPaymentPage = () => {
     : "";
 
   const qrRef = React.useRef<HTMLDivElement>(null);
+  const receiptRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef: qrRef });
+  const printReceiptFn = useReactToPrint({ contentRef: receiptRef });
+
   const handlePrintQr = () => {
     reactToPrintFn();
   };
 
+  const handlePrintReceipt = () => {
+    printReceiptFn();
+  };
+
   return (
     <div className="space-y-6">
+      {/* Hidden receipt for printing */}
+      <div style={{ display: "none" }}>
+        <div
+          ref={receiptRef}
+          className="p-8 max-w-md mx-auto bg-white text-black"
+        >
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-bold">PayHub Receipt</h1>
+            <p className="text-gray-600">Transaction Confirmed</p>
+          </div>
+
+          <div className="border-t border-b border-gray-300 py-4 mb-4">
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Date:</span>
+              <span>{new Date().toLocaleDateString()}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Time:</span>
+              <span>{new Date().toLocaleTimeString()}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Product:</span>
+              <span>{productName}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Amount:</span>
+              <span>${Number.parseFloat(paymentAmount).toFixed(2)} PYUSD</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Merchant:</span>
+              <span className="text-xs break-all">{toEthAddress(address)}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="font-medium">Transaction Hash:</span>
+              <span className="text-xs break-all">{transactionHash}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Block Number:</span>
+              <span>{txBlock?.toString()}</span>
+            </div>
+          </div>
+
+          <div className="text-center text-sm text-gray-600">
+            <p>Thank you for using PayHub!</p>
+            <p>This receipt serves as proof of your transaction.</p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="border border-neutral-800 rounded-lg p-6 bg-black">
           <h2 className="text-xl font-semibold mb-1">Payment QR Code</h2>
@@ -383,6 +445,10 @@ const QRPaymentPage = () => {
                   <p className="text-sm text-neutral-400">Transaction Hash</p>
                   <p className="text-sm font-mono">{transactionHash}</p>
                 </div>
+                <div className="flex justify-between">
+                  <p className="text-sm text-neutral-400">Block Number</p>
+                  <p className="text-sm font-mono">{txBlock}</p>
+                </div>
               </div>
 
               <div className="p-4 border border-emerald-800 rounded-lg bg-emerald-950">
@@ -398,12 +464,21 @@ const QRPaymentPage = () => {
                 </p>
               </div>
 
-              <Button
-                className="w-full bg-black text-white border border-neutral-800 hover:bg-neutral-900"
-                onClick={startNewPayment}
-              >
-                Start New Payment
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  className="flex-1 bg-black text-white border border-neutral-800 hover:bg-neutral-900"
+                  onClick={startNewPayment}
+                >
+                  Start New Payment
+                </Button>
+                <Button
+                  className="flex-1 bg-[#FF6B00] text-white border border-neutral-800 hover:bg-[#E05E00]"
+                  onClick={handlePrintReceipt}
+                >
+                  <Printer className="mr-2 h-4 w-4" />
+                  Print Receipt
+                </Button>
+              </div>
             </div>
           )}
         </div>

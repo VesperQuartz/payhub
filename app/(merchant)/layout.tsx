@@ -10,7 +10,6 @@ import {
   LogOut,
   Menu,
   Package,
-  Shield,
   ShieldAlert,
 } from "lucide-react";
 
@@ -118,19 +117,6 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
                   className={`h-5 w-5 ${!sidebarOpen ? "mx-auto" : "mr-3"}`}
                 />
                 {sidebarOpen && <span>Product</span>}
-              </Link>
-              <Link
-                href="security"
-                className={`${
-                  isActive("/merchant/security")
-                    ? "bg-neutral-800 text-white"
-                    : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
-                } flex items-center px-2 py-2 text-sm font-medium rounded-md text-neutral-300 hover:bg-neutral-800 hover:text-white`}
-              >
-                <Shield
-                  className={`h-5 w-5 ${!sidebarOpen ? "mx-auto" : "mr-3"}`}
-                />
-                {sidebarOpen && <span>Security</span>}
               </Link>
               <Link
                 href="disputes"

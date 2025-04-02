@@ -99,6 +99,14 @@ export const BusinessProfileDialog = () => {
     },
   });
 
+  React.useEffect(() => {
+    if (businessProfile?.data) {
+      console.log("I was hit");
+      console.log(businessProfile?.data);
+      setProfile(businessProfile.data);
+    }
+  }, [businessProfile?.data, setProfile]);
+
   function onSubmit(data: FormValues) {
     if (!address) {
       toast.error("Please connect your wallet to continue");

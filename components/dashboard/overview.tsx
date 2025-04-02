@@ -1,4 +1,6 @@
 "use client";
+import { useGetTransactionPool } from "@/app/hooks/rpc";
+import { Card, CardContent, CardTitle } from "../ui/card";
 import { SalesAnalytics } from "./sales-analytics";
 import StatCard from "./stat-card";
 import TopCustomersTable from "./top-customers-table";
@@ -8,9 +10,6 @@ import { useAccount } from "wagmi";
 export const OverView = () => {
   const { address } = useAccount();
   const transactions = useGetTransactionByMerchantAddress(address!);
-  const pendingTransaction = transactions.data?.filter(
-    (tx) => tx.status === "pending",
-  ).length;
 
   const completedTransaction = transactions.data?.filter(
     (tx) => tx.status === "completed",
@@ -18,6 +17,7 @@ export const OverView = () => {
   const totalSales = transactions.data?.reduce((acc, tx) => acc + tx.price, 0);
 
   const recentTransactions = transactions.data?.slice(0, 6);
+  const pendingTxn = useGetTransactionPool();
   return (
     <div>
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -28,10 +28,6 @@ export const OverView = () => {
           showEyeIcon={true}
         />
         <StatCard
-          title="Pending Payments"
-          value={`${pendingTransaction ?? 0}`}
-        />
-        <StatCard
           title="Total Sales"
           value={`$${totalSales?.toFixed(2) ?? 0} PYUSD`}
         />
@@ -39,6 +35,13 @@ export const OverView = () => {
           title="Completed Transaction"
           value={`${completedTransaction ?? 0}`}
         />
+        <Card>
+          <CardTitle className="text-center">Watch txPool</CardTitle>
+          <CardContent className="text-white text font-bold">
+            <p>{pendingTxn.data?.pending} - pending transactions</p>
+            <p>{pendingTxn.data?.queued} - queued transactions</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid m-4 grid-cols-1 gap-6 lg:grid-cols-2">

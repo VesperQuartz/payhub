@@ -2,20 +2,20 @@
 import { User, ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { ConnectWallet } from "../connect-wallet";
-import { useUserInfoStore } from "@/app/store";
+import { useBusinessProfileStore } from "@/app/store";
 import { usePathname } from "next/navigation";
 import { match } from "ts-pattern";
 import Link from "next/link";
 
 export const NavBar = () => {
-  const user = useUserInfoStore();
+  const user = useBusinessProfileStore();
   const path = usePathname();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
         <h1 className="text-3xl font-bold capitalize">
           {match(path)
-            .with("/merchant/dashboard", () => user.payload?.businessName)
+            .with("/merchant/dashboard", () => user.profile?.businessName)
             .with("/merchant/products", () => {
               return (
                 <div className="flex items-center">

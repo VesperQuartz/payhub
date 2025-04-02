@@ -56,6 +56,14 @@ type CustomRpcSchema = [
     ReturnType: DebugParameterResponse;
   },
   {
+    Method: "txpool_status";
+    Parameters: [];
+    ReturnType: {
+      pending: `0x${string}`;
+      queued: `0x${string}`;
+    };
+  },
+  {
     Method: "debug_traceBlockByNumber";
     Parameters: [
       `0x${string}` | "latest" | "earliest" | "pending" | "finalized",

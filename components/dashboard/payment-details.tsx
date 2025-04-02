@@ -11,19 +11,6 @@ export const PaymentDetails = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800">
-        <div className="flex items-center gap-2">
-          <ShieldAlert className="h-5 w-5 text-amber-600" />
-          <h3 className="font-medium">Security Alerts</h3>
-        </div>
-        <p className="mt-1 text-sm">
-          You have 3 new security alerts that require your attention.{" "}
-          <a href="#" className="text-[#FF6B00] hover:underline">
-            View alerts
-          </a>
-        </p>
-      </div>
-
       <div className="space-y-4">
         <div>
           <h2 className="text-2xl font-bold">Payment Options</h2>

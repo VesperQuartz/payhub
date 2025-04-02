@@ -1,7 +1,7 @@
 import { pyUsdAbi } from "@/app/generated";
 import { client } from "@/lib/custom-client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { decodeFunctionData, hexToBool, toHex } from "viem";
+import { decodeFunctionData, hexToBool, hexToNumber, toHex } from "viem";
 
 export const useDebugTraceTransaction = (txHash: `0x${string}`) => {
   return useQuery({
@@ -20,6 +20,24 @@ export const useDebugTraceTransaction = (txHash: `0x${string}`) => {
         ],
       });
       return disputeCheck;
+    },
+  });
+};
+
+export const useGetTransactionPool = () => {
+  return useQuery({
+    queryKey: ["txpool_status"],
+    refetchInterval: 10000,
+    queryFn: async () => {
+      const pool = await client.request({
+        method: "txpool_status",
+        params: [],
+      });
+      return {
+        ...pool,
+        pending: hexToNumber(pool.pending),
+        queued: hexToNumber(pool.queued),
+      };
     },
   });
 };

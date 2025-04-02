@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetTransactionPool } from "@/app/hooks/rpc";
 import { OverView } from "@/components/dashboard/overview";
 import { PaymentDetails } from "@/components/dashboard/payment-details";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import React from "react";
 import { match } from "ts-pattern";
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = React.useState("overview");
+  useGetTransactionPool();
   return (
     <>
       <div className="mt-1 mb-2 flex items-center justify-between">
