@@ -8,7 +8,7 @@ interface BusinessCardProps {
   business: SelectBusinessProfile;
 }
 
-export function BusinessCard({ business }: BusinessCardProps) {
+export const BusinessCard = ({ business }: BusinessCardProps) => {
   return (
     <div className="border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/30 hover:border-neutral-700 transition-colors">
       <div>
@@ -42,21 +42,22 @@ export function BusinessCard({ business }: BusinessCardProps) {
             </div>
           </div>
           <div className="mt-4">
-            <Link href={`/store/${business.merchantAddress}`}>
-              <Button
-                variant="outline"
-                className="w-full border-[#FF6B00] text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white"
-                asChild
+            <Button
+              variant="outline"
+              className="w-full bg-orange-500 border-[#FF6B00] text-[#FF6B00] hover:bg-orange-600 hover:text-white"
+              asChild
+            >
+              <Link
+                href={`/store/${business.merchantAddress}`}
+                className=" flex items-center justify-center"
               >
-                <a className="flex items-center justify-center">
-                  View Business
-                  <ChevronRight size={16} className="ml-1" />
-                </a>
-              </Button>
-            </Link>
+                View Business
+                <ChevronRight size={16} className="ml-1" />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};

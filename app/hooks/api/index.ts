@@ -115,6 +115,25 @@ export const useUpdateProduct = () => {
   });
 };
 
+export const useReduceProductStock = () => {
+  return useMutation({
+    mutationKey: ["increment-product"],
+    mutationFn: async (id: number) => {
+      const [error, response] = await to(
+        ky.patch(`/api/product/stock/${id}`, {
+          json: {},
+        }),
+      );
+      if (error instanceof HTTPError) {
+        const message = await error.response.json();
+        console.log(message);
+        throw new Error(message.error);
+      }
+      return response.json<{ message: string }>();
+    },
+  });
+};
+
 export const useGetProductByMerchantAddress = (
   merchantAddress: `0x${string}`,
 ) => {

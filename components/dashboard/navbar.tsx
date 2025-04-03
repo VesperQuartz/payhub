@@ -6,6 +6,7 @@ import { useBusinessProfileStore } from "@/app/store";
 import { usePathname } from "next/navigation";
 import { match } from "ts-pattern";
 import Link from "next/link";
+import React from "react";
 
 export const NavBar = () => {
   const user = useBusinessProfileStore();
@@ -56,12 +57,18 @@ export const NavBar = () => {
         </h1>
       </div>
       <div className="flex items-center gap-4">
-        <Button variant="ghost" className="flex items-center gap-2 text-white">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF6B00]">
-            <User className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 text-white"
+          asChild
+        >
+          <div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF6B00]">
+              <User className="h-4 w-4" />
+            </div>
+            <ConnectWallet />
+            <ChevronDown className="h-4 w-4" />
           </div>
-          <ConnectWallet />
-          <ChevronDown className="h-4 w-4" />
         </Button>
       </div>
     </div>

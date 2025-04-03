@@ -18,11 +18,10 @@ export const Account = () => {
         role: "user",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getUser.data?.walletAddress]);
+  }, [getUser.data?.walletAddress, address, register]);
   return (
     <div className="flex gap-2 items-center">
-      <span>{address && toEthAddress(address)}</span>
+      <span>{address ? toEthAddress(address) : null}</span>
       <Button onClick={() => disconnect()} className="h-7 w-24">
         Disconnect
       </Button>

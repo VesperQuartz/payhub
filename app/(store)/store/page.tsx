@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { BusinessCard } from "@/components/store/business-card";
 import { useGetStoreProduct } from "@/app/hooks/api";
 
-// Business category type
 type BusinessCategory =
   | "All"
   | "Food & Drink"

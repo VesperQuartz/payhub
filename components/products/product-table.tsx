@@ -84,17 +84,17 @@ export function ProductTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
-                key={headerGroup.id}
+                key={headerGroup.id + `${crypto.randomUUID()}`}
                 className="border-gray-800 hover:bg-transparent"
               >
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id + `${crypto.randomUUID()}`}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -106,14 +106,14 @@ export function ProductTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row.id + `${crypto.randomUUID()}`}
                   className="border-gray-800 hover:bg-gray-900/50"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id + `${crypto.randomUUID()}`}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -158,7 +158,7 @@ export function ProductTable<TData, TValue>({
 
 export function getProductColumns(
   onEdit?: (product: SelectProduct) => void,
-  onDelete?: (product: SelectProduct) => void
+  onDelete?: (product: SelectProduct) => void,
 ): ColumnDef<SelectProduct>[] {
   return [
     {

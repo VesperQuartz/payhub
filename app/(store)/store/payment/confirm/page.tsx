@@ -9,7 +9,7 @@ import { useAccount, useEstimateFeesPerGas } from "wagmi";
 import { sepolia } from "viem/chains";
 import { toEthAddress, toNetWorkFee } from "@/lib/utils";
 import { useWritePyUsdTransfer } from "@/app/generated";
-import { useAddTransaction } from "@/app/hooks/api";
+import { useAddTransaction, useReduceProductStock } from "@/app/hooks/api";
 import { toast } from "sonner";
 
 const PaymentConfirmPage = () => {
@@ -21,6 +21,7 @@ const PaymentConfirmPage = () => {
   });
   const payment = useAddTransaction();
   const transfer = useWritePyUsdTransfer();
+  const reduce = useReduceProductStock();
 
   const handleConfirmPayment = () => {
     transfer.writeContract(
@@ -45,6 +46,7 @@ const PaymentConfirmPage = () => {
             },
             {
               onSuccess: () => {
+                reduce.mutate(paymentInfo.product!.id);
                 router.push(`/store/payment/success?txHash=${data}`);
               },
               onError: () => {

@@ -131,6 +131,25 @@ app.put(
   },
 );
 
+app.patch(
+  "/product/stock/:id",
+  zValidator(
+    "param",
+    z.object({
+      id: z.coerce.number(),
+    }),
+  ),
+  async (c) => {
+    const payload = c.req.valid("param");
+    const product = new ProductRepository();
+    const [error] = await to(product.updateProductStockById(payload.id));
+    if (error) {
+      return c.json({ error: error.message }, 500);
+    }
+    return c.json({ message: "Product updated" });
+  },
+);
+
 app.delete(
   "/product/:id",
   zValidator(

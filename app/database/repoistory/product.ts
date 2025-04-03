@@ -6,7 +6,7 @@ import {
   UpdateProduct,
 } from "../schema";
 import { to } from "await-to-ts";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 interface ProductRepositoryImpl {
   save(user: InsertProduct): Promise<SelectProduct>;
@@ -15,6 +15,7 @@ interface ProductRepositoryImpl {
   ): Promise<SelectProduct[]>;
   deleteProductById(id: number): Promise<void>;
   updateProductById(id: number, payload: UpdateProduct): Promise<SelectProduct>;
+  updateProductStockById(id: number): Promise<SelectProduct>;
 }
 
 export class ProductRepository implements ProductRepositoryImpl {
@@ -76,6 +77,21 @@ export class ProductRepository implements ProductRepositoryImpl {
           productPrice: payload.productPrice,
           merchantAddress: payload.merchantAddress,
           stock: payload.stock,
+        })
+        .where(eq(productTable.id, id))
+        .returning(),
+    );
+    if (error) {
+      throw error;
+    }
+    return product[0];
+  }
+  async updateProductStockById(id: number): Promise<SelectProduct> {
+    const [error, product] = await to(
+      db
+        .update(productTable)
+        .set({
+          stock: sql`${productTable.stock} - 1`,
         })
         .where(eq(productTable.id, id))
         .returning(),

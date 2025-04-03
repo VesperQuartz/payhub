@@ -14,6 +14,7 @@ import {
 import {
   useAddTransaction,
   useGetProductByMerchantAddress,
+  useReduceProductStock,
   useRegister,
 } from "@/app/hooks/api";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
@@ -44,6 +45,7 @@ const QRPaymentPage = () => {
   const [txhash, setTxHash] = useState<`0x${string}` | undefined>(undefined);
   const [txBlock, setBlock] = useState<bigint | undefined>(undefined);
   const [productName, setProductName] = useState<string>();
+  const [productId, setProductId] = useState<number>(1e4);
   const [paymentAmount, setPaymentAmount] = useState<string>("");
   const [monitoringState, setMonitoringState] = useState<MonitoringState>(
     MonitoringState.NOT_STARTED,
@@ -58,14 +60,14 @@ const QRPaymentPage = () => {
       setSelectedProduct(productId);
       setPaymentAmount(product.productPrice.toString());
       setProductName(product.productName);
+      setProductId(product.id);
     }
   };
   const txRecipt = useWaitForTransactionReceipt({
     chainId: sepolia.id,
     hash: txhash,
   });
-
-  console.log(txRecipt.data, "Transaction Receipt");
+  const reduce = useReduceProductStock();
 
   useWatchPyUsdTransferEvent({
     chainId: sepolia.id,
@@ -106,6 +108,7 @@ const QRPaymentPage = () => {
                 {
                   onSuccess: () => {
                     toast.success("Transaction was a success!");
+                    reduce.mutate(productId);
                     queryClient.invalidateQueries({
                       queryKey: ["transaction", address!],
                     });
@@ -170,7 +173,6 @@ const QRPaymentPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Hidden receipt for printing */}
       <div style={{ display: "none" }}>
         <div
           ref={receiptRef}
