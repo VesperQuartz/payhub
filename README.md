@@ -91,6 +91,12 @@ PayHub is a modern payment processing solution that leverages blockchain technol
   - Transaction amount validation
   - Automatic status updates
 
+5. **Smart Contract Event Monitoring Service**
+
+   - Extensive use of `eth_getLogs` for monitoring specific contract events
+   - Real time notifications for merchants on payment confirmations
+   - Event-driven architecture for efficient blockchain data processing
+
 ### 3. Technical Implementation
 
 #### Blockchain Integration
@@ -128,7 +134,14 @@ PayHub is a modern payment processing solution that leverages blockchain technol
    - The system includes a print functionality for QR codes
    - We track payment status and update the UI accordingly
 
-5. **Dispute Resolution System**
+5. **Smart Contract Event Monitoring Service**
+
+   - Extensive use of `eth_getLogs` for monitoring specific contract events
+   - Real-time notifications for merchants on payment confirmations
+   - Event-driven architecture for efficient blockchain data processing
+   - Automated status updates for transaction lifecycle events
+
+6. **Dispute Resolution System**
 
    - We use `useDebugTraceBlockByNumber` to verify transaction details and also because block number is better than using transaction hash `debug_traceTransaction` because of the length of the transaction hash.
    - The system allows merchants to:
@@ -143,7 +156,7 @@ PayHub is a modern payment processing solution that leverages blockchain technol
      - Resolution details
      - Timestamps
 
-6. **Database Structure**
+7. **Database Structure**
 
    - Using Turso (SQLite) with Drizzle ORM
    - Main tables include:
@@ -152,7 +165,7 @@ PayHub is a modern payment processing solution that leverages blockchain technol
      - Transactions (payment records)
      - Disputes (resolution tracking)
 
-7. **Security Features**
+8. **Security Features**
    - All transactions are verified through the blockchain
    - Wallet connections are handled securely through wagmi
    - Transaction verification is done on-chain

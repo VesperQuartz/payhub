@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Check, Printer } from "lucide-react";
+import { ArrowLeft, Check, Printer, RefreshCcwIcon } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -58,8 +58,12 @@ const PaymentSuccessPage = () => {
         </div>
 
         <div className="bg-white rounded-lg p-6 text-black" ref={receiptRef}>
-          <h1 className="text-2xl font-bold mb-1">
+          <h1 className="text-2xl font-bold mb-1 flex justify-between">
             Pay {paymentInfo?.business?.name}
+            <RefreshCcwIcon
+              onClick={() => reciept.refetch()}
+              className={`${reciept.isFetching && "animate-spin"}`}
+            />
           </h1>
           <p className="text-gray-600 mb-6">
             Complete your payment using PYUSD

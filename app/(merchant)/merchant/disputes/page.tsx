@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useAddDispute } from "@/app/hooks/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
+import { TransactionFlowDiagram } from "@/components/transaction-graph";
 
 const DisputeResolutionPage = () => {
   const { address } = useAccount();
@@ -146,6 +147,7 @@ const DisputeResolutionPage = () => {
 
         <DisputeHistory />
       </div>
+      <TransactionFlowDiagram transactionData={debugBlock.data ?? []} />
     </>
   );
 };

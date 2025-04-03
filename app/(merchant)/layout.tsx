@@ -17,7 +17,10 @@ import { Button } from "@/components/ui/button";
 import { NavBar } from "@/components/dashboard/navbar";
 import { BusinessProfileDialog } from "@/components/dashboard/business-profile-dialog";
 import { usePathname, useRouter } from "next/navigation";
-import { useDisconnect } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
+import { useWatchPyUsdTransferEvent } from "../generated";
+import { sepolia } from "viem/chains";
+import { toast } from "sonner";
 
 const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -44,6 +47,21 @@ const MerchantLayout = ({ children }: { children: React.ReactNode }) => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  const { address } = useAccount();
+
+  useWatchPyUsdTransferEvent({
+    chainId: sepolia.id,
+    onLogs: (logs) => {
+      const { value, to, from } = logs[0].args;
+      if (to === address) {
+        if (logs[0].logIndex === null) {
+          toast.info("You have a pending transaction!");
+        }
+        toast.info(`Transfer of ${value} from ${from} to ${to}`);
+      }
+    },
+  });
 
   return (
     <>
