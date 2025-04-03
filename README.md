@@ -48,7 +48,6 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 - **Dispute Resolution System**
 
   - View and respond to customer disputes
-  - Upload evidence and documentation
   - Track dispute status and history
 
 - **Transaction Verification**
@@ -63,8 +62,8 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 
 - **Product Discovery**
 
-  - Advanced search functionality
-  - Category-based browsing
+  - Store search functionality
+  - Category based browsing
   - Product filtering and sorting
   - Detailed product information
 
@@ -86,7 +85,7 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 
 - **QR Code Payment System**
   - Dynamic QR code generation for each transaction
-  - Real-time payment status updates
+  - Real time payment status updates
   - Mobile wallet compatibility
   - Secure payment verification
   - Transaction amount validation
@@ -98,27 +97,27 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 
 1. **Google Blockchain RPC Integration**
 
-   - Leveraging Google Cloud's enterprise-grade blockchain infrastructure
+   - Leveraging Google Cloud's enterprise grade blockchain infrastructure
    - Benefits include:
      - Enterprise-grade reliability through Google Cloud infrastructure
-     - Cost-effective with generous free tier (up to 100 requests/second)
+     - Cost effective with generous free tier
      - Seamless scalability for growing request volumes
      - Full compatibility with existing RPC providers
    - Using managed Ethereum nodes for secure blockchain access
-   - Leveraging Google's peer-to-peer network for real-time blockchain data synchronization
+   - Leveraging Google's peer to peer network for real time blockchain data synchronization
 
 2. **Wallet Connection**
 
    - We use wagmi's `useConnect` hook for wallet integration
    - Currently supporting MetaMask Wallet through wagmi connectors
-   - Wallet state is managed through wagmi's built-in hooks
+   - Wallet state is managed through wagmi's builtin hooks
    - We store wallet addresses in our database for user identification
 
 3. **PYUSD Integration**
 
    - We interact with the PYUSD token contract on Sepolia testnet
    - Using wagmi's hooks for contract interactions
-   - Contract address: `0xCaC524BcA292aaade2DF8A05cC58F0a65B1B3bB9` [Test-Net]
+   - Contract address: `0xCaC524BcA292aaade2DF8A05cC58F0a65B1B3bB9` [testnet]
    - We check balances and estimate gas fees before transactions
 
 4. **QR Code Payment System**
@@ -131,8 +130,7 @@ PayHub is a modern payment processing solution that leverages blockchain technol
 
 5. **Dispute Resolution System**
 
-   - We use `useDebugTraceBlockByNumber` to verify transaction details and also becaue block number is better than using transaction hash
-     because of the length of the transaction hash.
+   - We use `useDebugTraceBlockByNumber` to verify transaction details and also because block number is better than using transaction hash `debug_traceTransaction` because of the length of the transaction hash.
    - The system allows merchants to:
      - Enter transaction block numbers
      - View transaction details (amount, sender, receiver)
@@ -174,7 +172,7 @@ PayHub addresses these issues by:
 - Using blockchain technology for transparent, immutable transaction records
 - Implementing smart contracts for automated, secure payments
 - Providing a streamlined dispute resolution system
-- Offering real-time transaction tracking
+- Offering real time transaction tracking
 - Supporting global transactions through cryptocurrency
 
 ## Technical Stack
@@ -184,7 +182,7 @@ PayHub addresses these issues by:
 - **Blockchain**:
   - Sepolia testnet with Google's Blockchain RPC
     - Enterprise-grade managed nodes
-    - High-performance infrastructure
+    - High performance infrastructure
     - Scalable request handling
     - Secure blockchain access
   - wagmi/viem for blockchain interactions
@@ -203,10 +201,10 @@ PayHub addresses these issues by:
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn
+- npm or yarn or bun
 - MetaMask or another Web3 wallet
-- Access to Sepolia testnet
-- Some testnet ETH and PYUSD tokens
+- Access to Sepolia testnet [testnet_token](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)
+- Some testnet ETH and PYUSD tokens [pyusd_token](https://faucet.paxos.com/)
 
 ### Installation
 
@@ -231,9 +229,8 @@ PayHub addresses these issues by:
    ```
    DATABASE_URL=your_turso_database_url
    TURSO_TOKEN=your_turso_auth_token
-   NEXT_PUBLIC_MAIN_RPC=your_mainnet_rpc_url
+   NEXT_PUBLIC_MAIN_RPC=your_mainnet_rpc_url (optional)
    NEXT_PUBLIC_SEPOLIA_RPC=your_sepolia_rpc_url
-   NEXT_PUBLIC_HOLESKY_RPC=your_holesky_rpc_url
    ETHERSCAN_API_KEY=your_etherscan_api_key
    ```
 
@@ -258,29 +255,30 @@ PayHub addresses these issues by:
 
 2. **Add Products**:
 
-   - Navigate to the inventory section
+   - Go to products
+   - Navigate to the Categories section
+   - Create new Category
+   - Navigate to All products
    - Click "Add Product"
    - Fill in product details and price
    - Save the product
 
 3. **Manage Sales**:
 
-   - View real-time sales data
+   - View real time sales data
    - Track transaction history
-   - Generate reports
 
 4. **Handle Disputes**:
-   - Review dispute claims
-   - Provide evidence
+   - Review dispute claims from customers
    - Resolve disputes through the platform
 
 ### For Customers
 
-1. **Browse Products**:
+1. **Browse Products / Services**:
 
    - Visit the store
-   - Search for products
-   - View product details
+   - Search for services
+   - View service details
 
 2. **Make a Purchase**:
 
