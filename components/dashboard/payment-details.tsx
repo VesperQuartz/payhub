@@ -1,6 +1,6 @@
 "use client";
 
-import { QrCode, ShieldAlert } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "wagmi";
 import Link from "next/link";

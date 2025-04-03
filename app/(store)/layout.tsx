@@ -15,13 +15,13 @@ const StoreLayout = ({
         <div className="max-w-7xl mx-auto text-center text-neutral-400 text-sm">
           <p>© 2025 PayHub. All rights reserved.</p>
           <div className="flex justify-center gap-6 mt-4">
-            <Link href="#" passHref legacyBehavior>
+            <Link href="#">
               <a className="hover:text-white transition-colors">Terms</a>
             </Link>
-            <Link href="#" passHref legacyBehavior>
+            <Link href="#">
               <a className="hover:text-white transition-colors">Privacy</a>
             </Link>
-            <Link href="#" passHref legacyBehavior>
+            <Link href="#">
               <a className="hover:text-white transition-colors">Support</a>
             </Link>
           </div>

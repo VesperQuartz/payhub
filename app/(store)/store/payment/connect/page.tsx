@@ -14,7 +14,6 @@ const PaymentConnectPage = () => {
   const analyze = useEstimateFeesPerGas({
     chainId: sepolia.id,
   });
-  console.log(analyze.data, "GASSA");
 
   const handleProceedToPayment = () => {
     router.push("/store/payment/details");

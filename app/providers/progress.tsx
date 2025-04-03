@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ProgressProvider } from "@bprogress/next/pages";
+import { ProgressProvider } from "@bprogress/next/app";
 
 export const ProgressProviders = ({
   children,
@@ -9,13 +9,14 @@ export const ProgressProviders = ({
 }) => {
   return (
     <>
-      {children}
       <ProgressProvider
         height="4px"
         color="#FF6B00"
-        options={{ showSpinner: false }}
+        options={{ showSpinner: true }}
         shallowRouting
-      />
+      >
+        {children}
+      </ProgressProvider>
     </>
   );
 };

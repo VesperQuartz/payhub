@@ -53,7 +53,6 @@ import { SelectProduct } from "@/app/database/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-// Product schema for form validation
 const productFormSchema = z.object({
   name: z.string().min(2, {
     message: "Product name must be at least 2 characters.",
@@ -491,7 +490,6 @@ const ProductsPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Add Category Dialog */}
       <AddCategoryDialog
         open={isAddCategoryOpen}
         onOpenChange={setIsAddCategoryOpen}

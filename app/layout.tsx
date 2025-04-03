@@ -6,6 +6,7 @@ import "./globals.css";
 import "@bprogress/core/css";
 import { AsyncProvider } from "./providers/async-provider";
 import { ThemeProvider } from "./providers/theme-provider";
+import { ProgressProviders } from "./providers/progress";
 
 const space = Space_Grotesk({
   subsets: ["latin"],
@@ -35,7 +36,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NuqsAdapter>
-            <AsyncProvider>{children}</AsyncProvider>
+            <AsyncProvider>
+              <ProgressProviders>{children}</ProgressProviders>
+            </AsyncProvider>
           </NuqsAdapter>
           <Toaster position="top-center" richColors />
         </ThemeProvider>
