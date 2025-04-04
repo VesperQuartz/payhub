@@ -7,20 +7,21 @@ import TopCustomersTable from "./top-customers-table";
 import TransactionsTable from "./transactions-table";
 import { useGetTransactionByMerchantAddress } from "@/app/hooks/api";
 import { useAccount } from "wagmi";
+
 export const OverView = () => {
   const { address } = useAccount();
   const transactions = useGetTransactionByMerchantAddress(address!);
 
   const completedTransaction = transactions.data?.filter(
-    (tx) => tx.status === "completed",
+    (tx) => tx.status === "completed"
   ).length;
   const totalSales = transactions.data?.reduce((acc, tx) => acc + tx.price, 0);
 
   const recentTransactions = transactions.data?.slice(0, 6);
   const pendingTxn = useGetTransactionPool();
   return (
-    <div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
         <StatCard
           title="Your Balance"
           value={`0`}
@@ -36,20 +37,24 @@ export const OverView = () => {
           value={`${completedTransaction ?? 0}`}
         />
         <Card>
-          <CardTitle className="text-center">Watch txPool</CardTitle>
-          <CardContent className="text-white text font-bold">
+          <CardTitle className="text-center text-sm md:text-base">
+            Watch txPool
+          </CardTitle>
+          <CardContent className="text-white text-sm md:text-base font-bold">
             <p>{pendingTxn.data?.pending} - pending transactions</p>
             <p>{pendingTxn.data?.queued} - queued transactions</p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid m-4 grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
         <SalesAnalytics />
         <TopCustomersTable customers={transactions?.data ?? []} />
       </div>
 
-      <TransactionsTable transactions={recentTransactions ?? []} />
+      <div className="overflow-x-auto">
+        <TransactionsTable transactions={recentTransactions ?? []} />
+      </div>
     </div>
   );
 };
