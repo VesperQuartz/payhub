@@ -1,5 +1,5 @@
 <iframe title="vimeo-player" src="https://player.vimeo.com/video/1072939212?h=1b054abbc6" width="640" height="360" frameborder="0"    allowfullscreen></iframe>
-
+[![Watch the video](https://i.vimeocdn.com/video/12345_640x360.jpg)](https://vimeo.com/1072939212)
 # PayHub
 
 A decentralized payment processing platform that enables secure, transparent, and efficient transactions between merchants and customers using blockchain technology.
