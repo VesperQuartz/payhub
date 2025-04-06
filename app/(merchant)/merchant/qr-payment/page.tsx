@@ -63,10 +63,22 @@ const QRPaymentPage = () => {
       setProductId(product.id);
     }
   };
+
   const txRecipt = useWaitForTransactionReceipt({
     chainId: sepolia.id,
     hash: txhash,
   });
+
+  React.useEffect(() => {
+    if (txRecipt.isSuccess) {
+      toast.success("Transaction recipt has been confirmed");
+    }
+  }, [
+    txRecipt.data?.blockNumber,
+    txRecipt.data?.transactionHash,
+    txRecipt.isSuccess,
+  ]);
+
   const reduce = useReduceProductStock();
 
   useWatchPyUsdTransferEvent({
@@ -93,31 +105,30 @@ const QRPaymentPage = () => {
           {
             onSettled: (data, error) => {
               console.log(data, error);
-              transaction.mutate(
-                {
-                  merchantAddress: to ?? address!,
-                  customerAddress: from!,
-                  price: Number(formatUnits(value!, 6)),
-                  productName: productName!,
-                  status:
-                    txRecipt.data?.status == "success"
-                      ? "completed"
-                      : "disputed",
-                  txHash: transactionHash,
-                },
-                {
-                  onSuccess: () => {
-                    toast.success("Transaction was a success!");
-                    reduce.mutate(productId);
-                    queryClient.invalidateQueries({
-                      queryKey: ["transaction", address!],
-                    });
+              if (address === to) {
+                transaction.mutate(
+                  {
+                    merchantAddress: to ?? address!,
+                    customerAddress: from!,
+                    price: Number(formatUnits(value!, 6)),
+                    productName: productName!,
+                    status: "completed",
+                    txHash: transactionHash,
                   },
-                  onError: (error) => {
-                    console.error(error);
+                  {
+                    onSuccess: () => {
+                      toast.success("Transaction was a success!");
+                      reduce.mutate(productId);
+                      queryClient.invalidateQueries({
+                        queryKey: ["transaction", address!],
+                      });
+                    },
+                    onError: (error) => {
+                      console.error(error);
+                    },
                   },
-                },
-              );
+                );
+              }
             },
           },
         );
