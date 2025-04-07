@@ -14,8 +14,9 @@ import { DebugTraceResponse } from "@/lib/custom-client";
 import { toast } from "sonner";
 import { useAddDispute } from "@/app/hooks/api";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAccount } from "wagmi";
+import { useAccount, useBlock } from "wagmi";
 import { TransactionFlowDiagram } from "@/components/transaction-graph";
+import { sepolia } from "viem/chains";
 
 const DisputeResolutionPage = () => {
   const { address } = useAccount();
@@ -30,6 +31,15 @@ const DisputeResolutionPage = () => {
   const queryClient = useQueryClient();
 
   const debugBlock = useDebugTraceBlockByNumber();
+  const blockInfo = useBlock({
+    chainId: sepolia.id,
+    blockNumber: BigInt(blockNo ?? 0n),
+  });
+
+  const timeStamp = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "medium",
+  }).format(new Date(Number(blockInfo.data?.timestamp ?? 0) * 1000));
 
   const handleVerifyTransaction = (blockNumber: string) => {
     setTransactionBlk(blockNumber);
@@ -124,7 +134,10 @@ const DisputeResolutionPage = () => {
 
           {step === 2 && transactionDetails && (
             <>
-              <TransactionDetails details={transactionDetails} />
+              <TransactionDetails
+                details={transactionDetails}
+                timeStamp={timeStamp}
+              />
               <ResolveDispute
                 details={transactionDetails}
                 onResolve={handleResolveDispute}

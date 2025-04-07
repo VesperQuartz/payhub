@@ -36,10 +36,12 @@ function TransactionDetailsSkeleton() {
 
 export function TransactionDetails({
   details,
+  timeStamp,
 }: {
   details: DebugTraceResponse | undefined;
+  timeStamp: string | undefined;
 }) {
-  if (!details) {
+  if (!details || !timeStamp) {
     return <TransactionDetailsSkeleton />;
   }
 
@@ -92,6 +94,11 @@ export function TransactionDetails({
         </div>
 
         <div className="bg-black border border-gray-800 rounded-lg p-3 sm:p-4">
+          <h4 className="text-sm text-gray-400 mb-2">Time of Transaction</h4>
+          <p className="text-white font-medium">{timeStamp}</p>
+        </div>
+
+        <div className="bg-black border border-gray-800 rounded-lg p-3 sm:p-4">
           <h4 className="text-sm text-gray-400 mb-2">From Wallet</h4>
           <p className="text-white font-medium text-sm truncate">
             {details[0].result.from}
@@ -126,12 +133,12 @@ export function TransactionDetails({
               .with(
                 true,
                 () =>
-                  "This transaction was completed successfully and the payment has been received."
+                  "This transaction was completed successfully and the payment has been received.",
               )
               .with(
                 false,
                 () =>
-                  "This transaction failed to complete. Reason: Insufficient funds"
+                  "This transaction failed to complete. Reason: Insufficient funds",
               )
               .exhaustive()}
           </p>
