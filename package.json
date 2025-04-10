@@ -9,6 +9,7 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "test": "bun test",
     "lint": "next lint"
   },
   "dependencies": {
@@ -65,15 +66,41 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@tanstack/eslint-plugin-query": "^5.68.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.3.4",
     "@wagmi/cli": "^2.2.0",
     "drizzle-kit": "^0.30.6",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
+    "happy-dom": "^17.4.4",
+    "jsdom": "^26.0.0",
     "postcss": "8",
     "tailwindcss": "3.4.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.1"
+  },
+  "trustedDependencies": [
+    "happy-dom"
+  ],
+  "bunTest": {
+    "environment": "happy-dom",
+    "setupFiles": [
+      "./__test__/setup.ts"
+    ],
+    "globals": true,
+    "deps": {
+      "inline": [
+        "@testing-library/jest-dom",
+        "@testing-library/react",
+        "@testing-library/user-event",
+        "wagmi"
+      ]
+    }
   }
 }

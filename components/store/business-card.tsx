@@ -10,8 +10,8 @@ interface BusinessCardProps {
 
 export const BusinessCard = ({ business }: BusinessCardProps) => {
   return (
-    <div className="border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/30 hover:border-neutral-700 transition-colors">
-      <div>
+    <div className="h-[410px] border flex border-neutral-800 rounded-lg overflow-hidden bg-neutral-900/30 hover:border-neutral-700 transition-colors">
+      <div className="w-full flex flex-col">
         <div className="h-48 relative overflow-hidden">
           <Image
             width={500}

@@ -102,7 +102,7 @@ const DisputeReceipt = React.forwardRef<HTMLDivElement, DisputeReceiptProps>(
         </div>
       </div>
     );
-  },
+  }
 );
 
 DisputeReceipt.displayName = "DisputeReceipt";
@@ -251,7 +251,7 @@ export function DisputeHistory() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -275,7 +275,7 @@ export function DisputeHistory() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

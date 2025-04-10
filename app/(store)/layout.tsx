@@ -8,7 +8,7 @@ const StoreLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="bg-black text-white">
       <NavBar />
       <main>{children}</main>
       <footer className="border-t border-neutral-800 py-8 px-6 mt-12">

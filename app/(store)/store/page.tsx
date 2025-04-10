@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BusinessCard } from "@/components/store/business-card";
 import { useGetStoreProduct } from "@/app/hooks/api";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type BusinessCategory =
   | "All"
@@ -41,7 +42,7 @@ const StorePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white py-12 px-4 md:px-8">
+    <div className="bg-black text-white py-12 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-2">Local Businesses</h1>
@@ -79,6 +80,13 @@ const StorePage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {businesses.isLoading && (
+            <>
+              <Skeleton className="h-64 w-full rounded-lg" />
+              <Skeleton className="h-64 w-full rounded-lg" />
+              <Skeleton className="h-64 w-full rounded-lg" />
+            </>
+          )}
           {filteredBusinesses?.map((business) => (
             <BusinessCard key={business.merchantAddress} business={business} />
           ))}
