@@ -73,6 +73,7 @@ export const transactionTable = sqliteTable("transactions", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   productName: text("product_name").notNull(),
   price: integer("amount").notNull(),
+  quantity: integer("quantity").default(1),
   status: text("status")
     .$type<"completed" | "pending" | "disputed">()
     .notNull(),

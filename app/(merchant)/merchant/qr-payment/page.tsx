@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Check, Copy, QrCode, RefreshCw, Printer } from "lucide-react";
+import {
+  Check,
+  Copy,
+  QrCode,
+  RefreshCw,
+  Printer,
+  Plus,
+  Minus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -26,11 +35,18 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useReactToPrint } from "react-to-print";
 import { sepolia } from "viem/chains";
+import { SelectProduct } from "@/app/database/schema";
+import { useArray } from "@/app/hooks";
 
 enum MonitoringState {
   NOT_STARTED = "not_started",
   WAITING = "waiting",
   CONFIRMED = "confirmed",
+}
+
+interface CartItem {
+  product: SelectProduct;
+  quantity: number;
 }
 
 const QRPaymentPage = () => {
@@ -54,13 +70,75 @@ const QRPaymentPage = () => {
   const [transactionHash, setTransactionHash] = useState<string>("");
   const queryClient = useQueryClient();
 
+  const cart = useArray<CartItem>([]);
+
+  const removeFromCart = (productId: number) => {
+    const updatedCart = cart.value.filter(
+      (item) => item.product.id !== productId,
+    );
+    cart.set(updatedCart);
+
+    const newTotal = updatedCart.reduce(
+      (sum, item) =>
+        sum + Number(item.product.productPrice) * Number(item.quantity),
+      0,
+    );
+    setPaymentAmount(newTotal.toFixed(2));
+  };
+
+  const updateQuantity = (productId: number, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    const updatedCart = cart.value.map((item) =>
+      item.product.id === productId ? { ...item, quantity: newQuantity } : item,
+    );
+    cart.set(updatedCart);
+
+    const newTotal = updatedCart.reduce(
+      (sum, item) =>
+        sum + Number(item.product.productPrice) * Number(item.quantity),
+      0,
+    );
+    setPaymentAmount(newTotal.toFixed(2));
+  };
+
+  const clearCart = () => {
+    cart.clear();
+    setPaymentAmount("0.00");
+    setProductName("");
+    setProductId(1e4);
+    setSelectedProduct(undefined);
+  };
+
   const handleProductSelect = (productId: string) => {
     const product = products.data?.find((p) => p.id.toString() === productId);
     if (product) {
       setSelectedProduct(productId);
-      setPaymentAmount(product.productPrice.toString());
       setProductName(product.productName);
       setProductId(product.id);
+
+      const existingItemIndex = cart.value.findIndex(
+        (item) => item.product.id === product.id,
+      );
+
+      if (existingItemIndex !== -1) {
+        const updatedItem = {
+          ...cart.value[existingItemIndex],
+          quantity: cart.value[existingItemIndex].quantity + 1,
+        };
+        cart.update(existingItemIndex, updatedItem);
+      } else {
+        cart.push({ product, quantity: 1 });
+      }
+
+      const newTotal = cart.value.reduce((sum, item) => {
+        return sum + Number(item.product.productPrice) * Number(item.quantity);
+      }, product.productPrice); // Add the newly selected product's price
+
+      setPaymentAmount(newTotal.toFixed(2));
     }
   };
 
@@ -106,28 +184,59 @@ const QRPaymentPage = () => {
             onSettled: (data, error) => {
               console.log(data, error);
               if (address === to) {
-                transaction.mutate(
-                  {
-                    merchantAddress: to ?? address!,
-                    customerAddress: from!,
-                    price: Number(formatUnits(value!, 6)),
-                    productName: productName!,
-                    status: "completed",
-                    txHash: transactionHash,
-                  },
-                  {
-                    onSuccess: () => {
-                      toast.success("Transaction was a success!");
-                      reduce.mutate(productId);
-                      queryClient.invalidateQueries({
-                        queryKey: ["transaction", address!],
-                      });
+                if (cart.value.length > 0) {
+                  cart.value.forEach((item) => {
+                    reduce.mutate(item.product.id);
+                    transaction.mutate(
+                      {
+                        merchantAddress: to ?? address!,
+                        customerAddress: from!,
+                        price: item.product.productPrice * item.quantity,
+                        productName: item.product.productName,
+                        status: "completed",
+                        txHash: transactionHash,
+                        quantity: item.quantity,
+                      },
+                      {
+                        onSuccess: () => {
+                          toast.success(
+                            `Transaction for ${item.product.productName} was a success!`,
+                          );
+                          queryClient.invalidateQueries({
+                            queryKey: ["transaction", address!],
+                          });
+                        },
+                        onError: (error) => {
+                          console.error(error);
+                        },
+                      },
+                    );
+                  });
+                } else {
+                  transaction.mutate(
+                    {
+                      merchantAddress: to ?? address!,
+                      customerAddress: from!,
+                      price: Number(formatUnits(value!, 6)),
+                      productName: productName!,
+                      status: "completed",
+                      txHash: transactionHash,
+                      quantity: 1,
                     },
-                    onError: (error) => {
-                      console.error(error);
+                    {
+                      onSuccess: () => {
+                        toast.success("Transaction was a success!");
+                        reduce.mutate(productId);
+                        queryClient.invalidateQueries({
+                          queryKey: ["transaction", address!],
+                        });
+                      },
+                      onError: (error) => {
+                        console.error(error);
+                      },
                     },
-                  },
-                );
+                  );
+                }
               }
             },
           },
@@ -158,6 +267,7 @@ const QRPaymentPage = () => {
     setMonitoringState(MonitoringState.NOT_STARTED);
     setMonitoringTime(0);
     setTransactionHash("");
+    clearCart();
   };
 
   const selectedProductDetails = products.data?.find(
@@ -204,8 +314,14 @@ const QRPaymentPage = () => {
               <span>{new Date().toLocaleTimeString()}</span>
             </div>
             <div className="flex justify-between mb-2">
-              <span className="font-medium">Product:</span>
-              <span>{productName}</span>
+              <span className="font-medium">Items:</span>
+              <span>
+                {cart.value.length > 0
+                  ? cart.value
+                      .map((item) => item.product.productName)
+                      .join(", ")
+                  : productName}
+              </span>
             </div>
             <div className="flex justify-between mb-2">
               <span className="font-medium">Amount:</span>
@@ -280,7 +396,82 @@ const QRPaymentPage = () => {
                 </Select>
               </div>
 
-              {selectedProduct && (
+              {!cart.isEmpty && (
+                <div className="mt-4 border border-neutral-800 rounded-lg p-4 bg-neutral-900">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-medium">Shopping Cart</h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 hover:text-red-400 hover:bg-red-950/30"
+                      onClick={clearCart}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Clear Cart
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {cart.value.map((item) => (
+                      <div
+                        key={item.product.id}
+                        className="flex justify-between items-center"
+                      >
+                        <div>
+                          <p className="font-medium">
+                            {item.product.productName}
+                          </p>
+                          <p className="text-sm text-neutral-400">
+                            ${item.product.productPrice.toFixed(2)} each
+                          </p>
+                        </div>
+                        <div className="flex items-center">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity - 1)
+                            }
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="mx-2 w-6 text-center">
+                            {item.quantity}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity + 1)
+                            }
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 ml-2 text-red-500"
+                            onClick={() => removeFromCart(item.product.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-neutral-800 flex justify-between items-center">
+                    <span className="font-medium">Total:</span>
+                    <span className="font-bold">
+                      ${Number.parseFloat(paymentAmount).toFixed(2)} PYUSD
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {selectedProduct && cart.value.length === 0 && (
                 <div>
                   <label className="text-sm text-neutral-400 mb-1 block">
                     Payment Amount
@@ -499,4 +690,5 @@ const QRPaymentPage = () => {
     </div>
   );
 };
+
 export default QRPaymentPage;

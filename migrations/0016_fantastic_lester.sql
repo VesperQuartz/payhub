@@ -1,0 +1,1 @@
+ALTER TABLE `transactions` ADD `quantity` integer DEFAULT 1;
