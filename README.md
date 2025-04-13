@@ -92,6 +92,13 @@ PayHub is a modern payment processing solution that leverages blockchain technol
   - Secure payment verification
   - Transaction amount validation
   - Automatic status updates
+  - Shopping cart functionality with:
+    - Multiple item selection in a single transaction
+    - Real-time quantity adjustments
+    - Individual item removal
+    - Cart clearing option
+    - Accurate total calculation for multiple items
+    - Separate transaction records for each product in cart
 
 5. **Smart Contract Event Monitoring Service**
 
@@ -226,7 +233,7 @@ PayHub addresses these issues by:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/payhub.git
+   git clone https://github.com/VesperQuartz/payhub.git
    cd payhub
    ```
 
@@ -331,92 +338,3 @@ The contract is deployed on:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Features
-
-### QR Payment System
-
-- **Shopping Cart Functionality**
-
-  - Add multiple products to cart
-  - Adjust quantities for each item
-  - Remove individual items
-  - Clear entire cart
-  - Real-time total calculation
-  - Supports decimal prices in PYUSD
-
-- **Dynamic QR Code Generation**
-
-  - Automatically generates QR codes for the total cart amount
-  - QR codes compatible with PYUSD-compatible wallets
-  - Printable QR codes for physical display
-
-- **Transaction Monitoring**
-
-  - Real-time payment monitoring
-  - Transaction confirmation tracking
-  - Detailed receipt generation with:
-    - Transaction details
-    - Item breakdown
-    - Block information
-    - Merchant and customer addresses
-
-- **Stock Management**
-  - Automatic stock reduction upon successful payment
-  - Multi-item transaction support
-  - Individual transaction records for each product
-
-### Merchant Features
-
-- Product management
-- Transaction history
-- Payment processing
-- Receipt printing
-- QR code generation
-
-## Technical Details
-
-### Payment Processing
-
-- Supports PYUSD cryptocurrency
-- Blockchain-based transactions
-- Real-time transaction monitoring
-- Automatic receipt generation
-
-### State Management
-
-- Custom `useArray` hook for cart management
-- Real-time price calculations
-- Persistent transaction monitoring
-- Automatic stock updates
-
-## Getting Started
-
-[Installation and setup instructions...]
-
-## Usage
-
-### Making a Payment
-
-1. Select products from the dropdown menu
-2. Adjust quantities as needed
-3. QR code will automatically update with the total amount
-4. Customer scans QR code with their wallet
-5. System monitors for payment confirmation
-6. Receipt is generated upon successful payment
-
-### Managing Products
-
-[Product management instructions...]
-
-## Security
-
-[Security information...]
-
-## Contributing
-
-[Contribution guidelines...]
-
-## License
-
-[License information...]
