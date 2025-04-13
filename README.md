@@ -100,6 +100,10 @@ PayHub is a modern payment processing solution that leverages blockchain technol
     - Accurate total calculation for multiple items
     - Separate transaction records for each product in cart
 
+
+https://github.com/user-attachments/assets/f83dfc3e-54a1-4f6a-9ba3-a5f939b00e81
+
+
 5. **Smart Contract Event Monitoring Service**
 
    - Extensive use of `eth_getLogs` for monitoring specific contract events
