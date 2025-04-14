@@ -136,7 +136,7 @@ const QRPaymentPage = () => {
 
       const newTotal = cart.value.reduce((sum, item) => {
         return sum + Number(item.product.productPrice) * Number(item.quantity);
-      }, product.productPrice); // Add the newly selected product's price
+      }, product.productPrice);
 
       setPaymentAmount(newTotal.toFixed(2));
     }
@@ -187,6 +187,7 @@ const QRPaymentPage = () => {
                 if (cart.value.length > 0) {
                   cart.value.forEach((item) => {
                     reduce.mutate(item.product.id);
+
                     transaction.mutate(
                       {
                         merchantAddress: to ?? address!,

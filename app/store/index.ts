@@ -50,7 +50,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
     (set) => ({
       hasSetupProfile: false,
       profile: null,
-      setProfile: (profile) => set({ profile, hasSetupProfile: true }),
+      setProfile: (profile) => set({ ...profile, hasSetupProfile: true }),
       resetProfile: () => set({ profile: null, hasSetupProfile: false }),
     }),
     {

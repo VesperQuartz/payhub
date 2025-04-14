@@ -39,7 +39,7 @@ export const productTable = sqliteTable("products", {
   productName: text("name").notNull(),
   productDescription: text("description").notNull(),
   productPrice: numeric("amount", { mode: "number" }).notNull(),
-  productCategory: text("category").notNull(),
+  productCategory: text("category").notNull().default("general"),
   stock: integer("stock").notNull(),
   merchantAddress: text("merchant_address")
     .$type<`0x${string}`>()
@@ -194,6 +194,7 @@ export type InsertProduct = typeof productTable.$inferInsert;
 export type SelectProduct = typeof productTable.$inferSelect;
 export const ProductInsertSchema = createInsertSchema(productTable, {
   merchantAddress: z.custom<`0x${string}`>(),
+  productCategory: z.string().transform((x) => (x === "" ? "general" : x)),
 });
 export const ProductUpdateSchema = createUpdateSchema(productTable, {
   merchantAddress: z.custom<`0x${string}`>(),

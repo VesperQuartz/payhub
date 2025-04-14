@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useBusinessProfileStore, useUserInfoStore } from "@/app/store";
+import { useUserInfoStore } from "@/app/store";
 import {
   useAddBusiness,
   useGetBusinessByMerchantAddress,
@@ -38,6 +38,7 @@ import {
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import { Textarea } from "../ui/textarea";
+import { useQueryClient } from "@tanstack/react-query";
 
 const businessCategories = [
   { value: "retail", label: "Retail" },
@@ -82,7 +83,6 @@ type FormValues = z.infer<typeof formSchema>;
 
 export const BusinessProfileDialog = () => {
   const [open, setOpen] = React.useState(true);
-  const { hasSetupProfile, setProfile } = useBusinessProfileStore();
   const business = useAddBusiness();
   const { address } = useAccount();
   const user = useUserInfoStore();
@@ -98,14 +98,17 @@ export const BusinessProfileDialog = () => {
       businessDescription: "",
     },
   });
+  console.log(businessProfile.data, "businessProfile");
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     if (businessProfile?.data) {
-      setProfile(businessProfile.data);
+    } else {
+      setOpen(true);
     }
-  }, [businessProfile?.data, setProfile]);
+  }, [businessProfile?.data, address]);
 
-  function onSubmit(data: FormValues) {
+  const onSubmit = (data: FormValues) => {
     if (!address) {
       toast.error("Please connect your wallet to continue");
       return;
@@ -113,9 +116,11 @@ export const BusinessProfileDialog = () => {
     business.mutate(
       { ...data, merchantAddress: address },
       {
-        onSuccess: (data) => {
-          setProfile(data);
+        onSuccess: (_data) => {
           setOpen(false);
+          queryClient.invalidateQueries({
+            queryKey: ["business", address],
+          });
           toast.success("Business profile created successfully");
         },
         onError: (error) => {
@@ -123,10 +128,9 @@ export const BusinessProfileDialog = () => {
         },
       },
     );
-  }
+  };
 
   if (
-    hasSetupProfile ||
     !address ||
     businessProfile?.data ||
     businessProfile.isLoading ||

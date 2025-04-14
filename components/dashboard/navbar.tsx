@@ -2,21 +2,30 @@
 import { User, ChevronDown, ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { ConnectWallet } from "../connect-wallet";
-import { useBusinessProfileStore } from "@/app/store";
 import { usePathname } from "next/navigation";
 import { match } from "ts-pattern";
 import Link from "next/link";
 import React from "react";
+import { useAccount } from "wagmi";
+import { useGetBusinessByMerchantAddress } from "@/app/hooks/api";
+import { Skeleton } from "../ui/skeleton";
 
 export const NavBar = () => {
-  const user = useBusinessProfileStore();
+  const { address } = useAccount();
+  const businessProfile = useGetBusinessByMerchantAddress(address!);
   const path = usePathname();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center">
         <h1 className="text-3xl font-bold capitalize">
           {match(path)
-            .with("/merchant/dashboard", () => user.profile?.businessName)
+            .with("/merchant/dashboard", () =>
+              businessProfile.isLoading ? (
+                <Skeleton className="w-24 h-10" />
+              ) : (
+                (businessProfile.data?.businessName ?? "Dashboard")
+              ),
+            )
             .with("/merchant/products", () => {
               return (
                 <div className="flex items-center">
